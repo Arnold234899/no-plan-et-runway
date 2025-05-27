@@ -4,10 +4,22 @@ import { Button } from "@/components/ui/button";
 import { ShoppingBag } from "lucide-react";
 import { ProductSorting } from "@/components/shop/ProductSorting";
 
+type Product = {
+  id: number;
+  name: string;
+  price: number;
+  priceDisplay: string;
+  image: string;
+  category: string;
+  sustainable: boolean;
+  isNew: boolean;
+  bestseller: boolean;
+};
+
 export const FeaturedProducts = () => {
   const [sortBy, setSortBy] = useState("newest");
 
-  const products = [
+  const products: Product[] = [
     {
       id: 1,
       name: "Eco Warrior Jacket",
@@ -76,7 +88,7 @@ export const FeaturedProducts = () => {
     }
   ];
 
-  const sortProducts = (products: typeof products, sortBy: string) => {
+  const sortProducts = (products: Product[], sortBy: string): Product[] => {
     const sorted = [...products];
     
     switch (sortBy) {
