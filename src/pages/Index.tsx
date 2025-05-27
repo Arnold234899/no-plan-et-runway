@@ -3,6 +3,8 @@ import { Hero } from "@/components/sections/Hero";
 import { FeaturedProducts } from "@/components/sections/FeaturedProducts";
 import { BrandMission } from "@/components/sections/BrandMission";
 import { Gallery } from "@/components/sections/Gallery";
+import { Influencers } from "@/components/sections/Influencers";
+import { Contact } from "@/components/sections/Contact";
 import { Navigation } from "@/components/layout/Navigation";
 import { Footer } from "@/components/layout/Footer";
 
@@ -14,6 +16,8 @@ const Index = () => {
       <FeaturedProducts />
       <BrandMission />
       <Gallery />
+      <Influencers />
+      <Contact />
       <Footer />
     </div>
   );

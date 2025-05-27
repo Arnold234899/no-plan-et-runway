@@ -1,42 +1,103 @@
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ShoppingBag } from "lucide-react";
+import { ProductSorting } from "@/components/shop/ProductSorting";
 
 export const FeaturedProducts = () => {
+  const [sortBy, setSortBy] = useState("newest");
+
   const products = [
     {
       id: 1,
       name: "Eco Warrior Jacket",
-      price: "$329",
+      price: 329,
+      priceDisplay: "$329",
       image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400&h=600&fit=crop",
       category: "Outerwear",
       sustainable: true,
+      isNew: true,
+      bestseller: false,
     },
     {
       id: 2,
       name: "Future Canvas Tee",
-      price: "$89",
+      price: 89,
+      priceDisplay: "$89",
       image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=600&fit=crop",
       category: "Tops",
       sustainable: true,
+      isNew: false,
+      bestseller: true,
     },
     {
       id: 3,
       name: "Revolution Pants",
-      price: "$195",
+      price: 195,
+      priceDisplay: "$195",
       image: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=400&h=600&fit=crop",
       category: "Bottoms",
       sustainable: true,
+      isNew: true,
+      bestseller: false,
     },
     {
       id: 4,
       name: "Conscious Collective Dress",
-      price: "$275",
+      price: 275,
+      priceDisplay: "$275",
       image: "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=600&fit=crop",
       category: "Dresses",
       sustainable: true,
+      isNew: false,
+      bestseller: true,
     },
+    {
+      id: 5,
+      name: "Sustainability Hoodie",
+      price: 149,
+      priceDisplay: "$149",
+      image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&h=600&fit=crop",
+      category: "Tops",
+      sustainable: true,
+      isNew: true,
+      bestseller: false,
+    },
+    {
+      id: 6,
+      name: "Zero Waste Blazer",
+      price: 399,
+      priceDisplay: "$399",
+      image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=400&h=600&fit=crop",
+      category: "Outerwear",
+      sustainable: true,
+      isNew: false,
+      bestseller: true,
+    }
   ];
+
+  const sortProducts = (products: typeof products, sortBy: string) => {
+    const sorted = [...products];
+    
+    switch (sortBy) {
+      case "name-asc":
+        return sorted.sort((a, b) => a.name.localeCompare(b.name));
+      case "name-desc":
+        return sorted.sort((a, b) => b.name.localeCompare(a.name));
+      case "price-low":
+        return sorted.sort((a, b) => a.price - b.price);
+      case "price-high":
+        return sorted.sort((a, b) => b.price - a.price);
+      case "newest":
+        return sorted.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
+      case "bestsellers":
+        return sorted.sort((a, b) => (b.bestseller ? 1 : 0) - (a.bestseller ? 1 : 0));
+      default:
+        return sorted;
+    }
+  };
+
+  const sortedProducts = sortProducts(products, sortBy);
 
   return (
     <section id="shop" className="py-20 px-4 sm:px-6 lg:px-8 bg-zinc-950">
@@ -50,8 +111,10 @@ export const FeaturedProducts = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {products.map((product) => (
+        <ProductSorting sortBy={sortBy} onSortChange={setSortBy} />
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          {sortedProducts.map((product) => (
             <div
               key={product.id}
               className="group relative overflow-hidden bg-zinc-900 rounded-lg hover:transform hover:scale-105 transition-all duration-500"
@@ -66,12 +129,24 @@ export const FeaturedProducts = () => {
                 {/* Overlay */}
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300"></div>
                 
-                {/* Sustainable Badge */}
-                {product.sustainable && (
-                  <div className="absolute top-4 left-4 bg-green-600 text-white text-xs px-2 py-1 rounded-full">
-                    Sustainable
-                  </div>
-                )}
+                {/* Badges */}
+                <div className="absolute top-4 left-4 space-y-2">
+                  {product.sustainable && (
+                    <div className="bg-green-600 text-white text-xs px-2 py-1 rounded-full">
+                      Sustainable
+                    </div>
+                  )}
+                  {product.isNew && (
+                    <div className="bg-blue-600 text-white text-xs px-2 py-1 rounded-full">
+                      New
+                    </div>
+                  )}
+                  {product.bestseller && (
+                    <div className="bg-orange-600 text-white text-xs px-2 py-1 rounded-full">
+                      Bestseller
+                    </div>
+                  )}
+                </div>
                 
                 {/* Quick Shop Button */}
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -86,7 +161,7 @@ export const FeaturedProducts = () => {
               <div className="p-6">
                 <p className="text-zinc-500 text-sm mb-1">{product.category}</p>
                 <h3 className="text-white font-semibold text-lg mb-2">{product.name}</h3>
-                <p className="text-zinc-300 text-xl font-bold">{product.price}</p>
+                <p className="text-zinc-300 text-xl font-bold">{product.priceDisplay}</p>
               </div>
             </div>
           ))}
