@@ -5,11 +5,26 @@ import { ArrowRight } from "lucide-react";
 export const Hero = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image/Video Placeholder */}
+      {/* Background with Logo */}
       <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900">
+        {/* Logo Background */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-10"
+          style={{
+            backgroundImage: `url('/lovable-uploads/037e7a11-8ef9-4427-9d04-0e61d2998717.png')`,
+            backgroundSize: 'contain',
+            backgroundPosition: 'center',
+            filter: 'blur(1px)'
+          }}
+        ></div>
+        
+        {/* Overlay Pattern */}
         <div className="absolute inset-0 opacity-20">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[length:60px_60px]"></div>
         </div>
+        
+        {/* Additional dark overlay to ensure text readability */}
+        <div className="absolute inset-0 bg-black/40"></div>
       </div>
 
       {/* Content */}
