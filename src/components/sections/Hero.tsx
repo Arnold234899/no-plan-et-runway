@@ -26,9 +26,56 @@ export const Hero = () => {
           ))}
         </div>
 
-        {/* Floating Earth emoji */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-8xl animate-bounce opacity-20">🌍</div>
+        {/* Large Floating Earth with animated text */}
+        <div className="absolute inset-0">
+          <div 
+            className="absolute transform -translate-x-1/2 -translate-y-1/2"
+            style={{
+              animation: 'float-around 20s ease-in-out infinite',
+              left: '50%',
+              top: '50%'
+            }}
+          >
+            {/* Large Earth */}
+            <div className="text-[20rem] animate-spin-slow opacity-30 relative">
+              🌍
+            </div>
+            
+            {/* Floating Text around Earth */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="relative">
+                <div 
+                  className="absolute text-4xl font-bold text-white animate-pulse"
+                  style={{
+                    animation: 'orbit-text 15s linear infinite',
+                    transformOrigin: '0 0'
+                  }}
+                >
+                  NO
+                </div>
+                <div 
+                  className="absolute text-5xl font-bold text-blue-400 animate-pulse"
+                  style={{
+                    animation: 'orbit-text 15s linear infinite',
+                    animationDelay: '-5s',
+                    transformOrigin: '0 0'
+                  }}
+                >
+                  PLAN-ET
+                </div>
+                <div 
+                  className="absolute text-6xl font-bold text-white animate-pulse"
+                  style={{
+                    animation: 'orbit-text 15s linear infinite',
+                    animationDelay: '-10s',
+                    transformOrigin: '0 0'
+                  }}
+                >
+                  B
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -79,6 +126,25 @@ export const Hero = () => {
           <div className="w-1 h-3 bg-zinc-600 rounded-full mt-2 animate-pulse"></div>
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes float-around {
+          0% { transform: translate(-50%, -50%) translateX(-200px) translateY(-100px); }
+          25% { transform: translate(-50%, -50%) translateX(200px) translateY(-150px); }
+          50% { transform: translate(-50%, -50%) translateX(250px) translateY(100px); }
+          75% { transform: translate(-50%, -50%) translateX(-150px) translateY(150px); }
+          100% { transform: translate(-50%, -50%) translateX(-200px) translateY(-100px); }
+        }
+        
+        @keyframes orbit-text {
+          0% { transform: rotate(0deg) translateX(150px) rotate(0deg); }
+          100% { transform: rotate(360deg) translateX(150px) rotate(-360deg); }
+        }
+        
+        .animate-spin-slow {
+          animation: spin 30s linear infinite;
+        }
+      `}</style>
     </section>
   );
 };
