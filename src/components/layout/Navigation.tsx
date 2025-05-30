@@ -20,7 +20,7 @@ export const Navigation = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <h1 className="text-2xl font-bold text-white tracking-wider">
+            <h1 className="text-2xl font-bold text-white tracking-wider hover:text-blue-400 transition-colors duration-300">
               NO PLAN-ET B
             </h1>
           </div>
@@ -32,10 +32,10 @@ export const Navigation = () => {
                 <a
                   key={item.name}
                   href={item.href}
-                  className="text-zinc-300 hover:text-white px-3 py-2 text-sm font-medium transition-colors duration-200 relative group"
+                  className="text-zinc-300 hover:text-blue-400 px-3 py-2 text-sm font-medium transition-all duration-300 relative group"
                 >
                   {item.name}
-                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full"></span>
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-green-400 transition-all duration-300 group-hover:w-full"></span>
                 </a>
               ))}
             </div>
@@ -43,8 +43,8 @@ export const Navigation = () => {
 
           {/* Shopping Cart */}
           <div className="hidden md:block">
-            <Button variant="ghost" size="sm" className="text-white hover:bg-zinc-800">
-              <ShoppingBag className="h-5 w-5" />
+            <Button variant="ghost" size="sm" className="text-white hover:bg-blue-900/30 hover:text-blue-400 transition-all duration-300 group">
+              <ShoppingBag className="h-5 w-5 group-hover:text-green-400 transition-colors duration-300" />
               <span className="ml-2">Cart (0)</span>
             </Button>
           </div>
@@ -55,7 +55,7 @@ export const Navigation = () => {
               variant="ghost"
               size="sm"
               onClick={() => setIsOpen(!isOpen)}
-              className="text-white"
+              className="text-white hover:text-blue-400 hover:bg-blue-900/30 transition-all duration-300"
             >
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </Button>
@@ -71,15 +71,15 @@ export const Navigation = () => {
               <a
                 key={item.name}
                 href={item.href}
-                className="text-zinc-300 hover:text-white block px-3 py-2 text-base font-medium transition-colors duration-200"
+                className="text-zinc-300 hover:text-blue-400 hover:bg-blue-900/20 block px-3 py-2 text-base font-medium transition-all duration-300 rounded-md"
                 onClick={() => setIsOpen(false)}
               >
                 {item.name}
               </a>
             ))}
             <div className="px-3 py-2">
-              <Button variant="ghost" size="sm" className="text-white hover:bg-zinc-800 w-full justify-start">
-                <ShoppingBag className="h-5 w-5 mr-2" />
+              <Button variant="ghost" size="sm" className="text-white hover:bg-blue-900/30 hover:text-blue-400 w-full justify-start transition-all duration-300 group">
+                <ShoppingBag className="h-5 w-5 mr-2 group-hover:text-green-400 transition-colors duration-300" />
                 Cart (0)
               </Button>
             </div>
