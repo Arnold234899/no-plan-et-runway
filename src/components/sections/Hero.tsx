@@ -26,7 +26,7 @@ export const Hero = () => {
           ))}
         </div>
 
-        {/* Large Floating Earth with animated text */}
+        {/* Large Floating Earth with text that moves together */}
         <div className="absolute inset-0">
           <div 
             className="absolute transform -translate-x-1/2 -translate-y-1/2 animate-float-around"
@@ -40,21 +40,43 @@ export const Hero = () => {
               🌍
             </div>
             
-            {/* Floating Text around Earth - better spaced */}
+            {/* Text positioned around Earth - moves as one unit with Earth */}
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="relative">
+                {/* NO - positioned top left */}
                 <div 
-                  className="absolute text-3xl font-bold text-white animate-pulse animate-orbit-text-1"
+                  className="absolute text-4xl font-bold text-white animate-pulse"
+                  style={{ 
+                    top: '-120px', 
+                    left: '-150px',
+                    transform: 'translate(-50%, -50%)'
+                  }}
                 >
                   NO
                 </div>
+                
+                {/* PLAN-ET - positioned top right */}
                 <div 
-                  className="absolute text-4xl font-bold text-blue-400 animate-pulse animate-orbit-text-2"
+                  className="absolute text-5xl font-bold text-blue-400 animate-pulse"
+                  style={{ 
+                    top: '-80px', 
+                    right: '-180px',
+                    transform: 'translate(50%, -50%)',
+                    animationDelay: '0.5s'
+                  }}
                 >
                   PLAN-ET
                 </div>
+                
+                {/* B - positioned bottom */}
                 <div 
-                  className="absolute text-5xl font-bold text-white animate-pulse animate-orbit-text-3"
+                  className="absolute text-6xl font-bold text-white animate-pulse"
+                  style={{ 
+                    bottom: '-150px', 
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    animationDelay: '1s'
+                  }}
                 >
                   B
                 </div>
