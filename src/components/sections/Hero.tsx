@@ -40,21 +40,21 @@ export const Hero = () => {
               🌍
             </div>
             
-            {/* Floating Text around Earth */}
+            {/* Floating Text around Earth - better spaced */}
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="relative">
                 <div 
-                  className="absolute text-4xl font-bold text-white animate-pulse animate-orbit-text"
+                  className="absolute text-3xl font-bold text-white animate-pulse animate-orbit-text-1"
                 >
                   NO
                 </div>
                 <div 
-                  className="absolute text-5xl font-bold text-blue-400 animate-pulse animate-orbit-text-delay-1"
+                  className="absolute text-4xl font-bold text-blue-400 animate-pulse animate-orbit-text-2"
                 >
                   PLAN-ET
                 </div>
                 <div 
-                  className="absolute text-6xl font-bold text-white animate-pulse animate-orbit-text-delay-2"
+                  className="absolute text-5xl font-bold text-white animate-pulse animate-orbit-text-3"
                 >
                   B
                 </div>

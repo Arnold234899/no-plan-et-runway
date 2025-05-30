@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -119,9 +118,17 @@ export default {
 					'75%': { transform: 'translate(-50%, -50%) translateX(-150px) translateY(150px)' },
 					'100%': { transform: 'translate(-50%, -50%) translateX(-200px) translateY(-100px)' }
 				},
-				'orbit-text': {
-					'0%': { transform: 'rotate(0deg) translateX(150px) rotate(0deg)' },
-					'100%': { transform: 'rotate(360deg) translateX(150px) rotate(-360deg)' }
+				'orbit-text-1': {
+					'0%': { transform: 'rotate(0deg) translateX(120px) rotate(0deg)' },
+					'100%': { transform: 'rotate(360deg) translateX(120px) rotate(-360deg)' }
+				},
+				'orbit-text-2': {
+					'0%': { transform: 'rotate(120deg) translateX(160px) rotate(-120deg)' },
+					'100%': { transform: 'rotate(480deg) translateX(160px) rotate(-480deg)' }
+				},
+				'orbit-text-3': {
+					'0%': { transform: 'rotate(240deg) translateX(200px) rotate(-240deg)' },
+					'100%': { transform: 'rotate(600deg) translateX(200px) rotate(-600deg)' }
 				},
 				'spin-slow': {
 					'0%': { transform: 'rotate(0deg)' },
@@ -135,14 +142,10 @@ export default {
 				'float': 'float 3s ease-in-out infinite',
 				'glow': 'glow 2s ease-in-out infinite',
 				'float-around': 'float-around 20s ease-in-out infinite',
-				'orbit-text': 'orbit-text 15s linear infinite',
-				'orbit-text-delay-1': 'orbit-text 15s linear infinite',
-				'orbit-text-delay-2': 'orbit-text 15s linear infinite',
+				'orbit-text-1': 'orbit-text-1 18s linear infinite',
+				'orbit-text-2': 'orbit-text-2 22s linear infinite',
+				'orbit-text-3': 'orbit-text-3 25s linear infinite',
 				'spin-slow': 'spin-slow 30s linear infinite'
-			},
-			animationDelay: {
-				'5s': '-5s',
-				'10s': '-10s'
 			}
 		}
 	},
