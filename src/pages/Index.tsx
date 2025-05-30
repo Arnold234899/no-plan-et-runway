@@ -1,4 +1,5 @@
 
+import { useState, useEffect } from "react";
 import { Hero } from "@/components/sections/Hero";
 import { Promotions } from "@/components/sections/Promotions";
 import { FeaturedProducts } from "@/components/sections/FeaturedProducts";
@@ -9,8 +10,19 @@ import { InfluencerApplicationForm } from "@/components/forms/InfluencerApplicat
 import { Contact } from "@/components/sections/Contact";
 import { Navigation } from "@/components/layout/Navigation";
 import { Footer } from "@/components/layout/Footer";
+import { LoadingScreen } from "@/components/ui/LoadingScreen";
 
 const Index = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  const handleLoadingComplete = () => {
+    setIsLoading(false);
+  };
+
+  if (isLoading) {
+    return <LoadingScreen onComplete={handleLoadingComplete} />;
+  }
+
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
       <Navigation />
