@@ -12,12 +12,19 @@ export const Footer = () => {
             <h3 className="text-3xl font-bold text-white mb-4 tracking-wider">
               NO PLAN-ET B
             </h3>
-            <p className="text-zinc-400 mb-6 max-w-md">
-              Redefining fashion through conscious creation. Join the movement toward 
-              a sustainable and stylish future.
+            <p className="text-zinc-400 mb-2 max-w-md">
+              Sustainable clothing brand. Saving the 🌎 one piece at a time👖
+            </p>
+            <p className="text-zinc-500 mb-6 text-sm">
+              94 Conrad Drive, Blairgowrie
             </p>
             <div className="flex space-x-4">
-              <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-white hover:bg-zinc-800">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-zinc-400 hover:text-white hover:bg-zinc-800"
+                onClick={() => window.open('https://instagram.com/no.plan_etb', '_blank')}
+              >
                 <Instagram className="h-5 w-5" />
               </Button>
               <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-white hover:bg-zinc-800">

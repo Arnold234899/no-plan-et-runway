@@ -119,7 +119,7 @@ export const Contact = () => {
               <Button 
                 variant="outline" 
                 className="w-full justify-start border-zinc-600 text-white hover:bg-zinc-800"
-                onClick={() => window.open('https://instagram.com/noplanetb', '_blank')}
+                onClick={() => window.open('https://instagram.com/no.plan_etb', '_blank')}
               >
                 <Instagram className="mr-3 h-5 w-5" />
                 Follow us on Instagram
