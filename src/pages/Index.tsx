@@ -24,7 +24,7 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white text-zinc-900">
+    <div className="min-h-screen bg-zinc-950 text-white">
       <Navigation />
       <Hero />
       <Promotions />
@@ -32,7 +32,7 @@ const Index = () => {
       <BrandMission />
       <Gallery />
       <Influencers />
-      <div className="py-24 px-6 sm:px-8 lg:px-12 bg-white">
+      <div className="py-20 px-4 sm:px-6 lg:px-8 bg-zinc-950">
         <InfluencerApplicationForm />
       </div>
       <Contact />
