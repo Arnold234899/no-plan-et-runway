@@ -1,21 +1,23 @@
 
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Eye, ShoppingBag } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export const Hero = () => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-zinc-950">
-      {/* Animated background without Three.js */}
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-emerald-950">
+      {/* Enhanced animated background with earth tones */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-zinc-950 to-blue-800/20"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/30 via-slate-950/90 to-emerald-900/40"></div>
         
-        {/* Animated particles */}
+        {/* Animated particles with earth colors */}
         <div className="absolute inset-0">
-          {[...Array(50)].map((_, i) => (
+          {[...Array(60)].map((_, i) => (
             <div
               key={i}
-              className="absolute w-1 h-1 bg-blue-400 rounded-full animate-pulse opacity-60"
+              className={`absolute w-1 h-1 rounded-full animate-pulse opacity-70 ${
+                i % 3 === 0 ? 'bg-blue-400' : i % 3 === 1 ? 'bg-emerald-400' : 'bg-teal-400'
+              }`}
               style={{
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,
@@ -26,7 +28,7 @@ export const Hero = () => {
           ))}
         </div>
 
-        {/* Large Floating Earth with text that moves together */}
+        {/* Enhanced Earth with environmental elements */}
         <div className="absolute inset-0">
           <div 
             className="absolute transform -translate-x-1/2 -translate-y-1/2 animate-float-around"
@@ -35,17 +37,19 @@ export const Hero = () => {
               top: '50%'
             }}
           >
-            {/* Large Earth */}
-            <div className="text-[20rem] animate-spin-slow opacity-30 relative">
-              🌍
+            {/* Large Earth with gradient glow */}
+            <div className="text-[20rem] animate-spin-slow opacity-40 relative filter drop-shadow-2xl">
+              <span className="bg-gradient-to-br from-blue-400 via-emerald-400 to-teal-500 bg-clip-text text-transparent">
+                🌍
+              </span>
             </div>
             
-            {/* Text positioned around Earth - moves as one unit with Earth */}
+            {/* Enhanced text positioning with earth-inspired colors */}
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="relative">
-                {/* NO - positioned top left */}
+                {/* NO - positioned top left with earth tone */}
                 <div 
-                  className="absolute text-4xl font-bold text-white animate-pulse"
+                  className="absolute text-4xl font-bold text-emerald-300 animate-pulse filter drop-shadow-lg"
                   style={{ 
                     top: '-120px', 
                     left: '-150px',
@@ -55,9 +59,9 @@ export const Hero = () => {
                   NO
                 </div>
                 
-                {/* PLAN-ET - positioned top right */}
+                {/* PLAN-ET - positioned top right with ocean blue */}
                 <div 
-                  className="absolute text-5xl font-bold text-blue-400 animate-pulse"
+                  className="absolute text-5xl font-bold text-blue-400 animate-pulse filter drop-shadow-lg"
                   style={{ 
                     top: '-80px', 
                     right: '-180px',
@@ -68,9 +72,9 @@ export const Hero = () => {
                   PLAN-ET
                 </div>
                 
-                {/* B - positioned bottom */}
+                {/* B - positioned bottom with forest green */}
                 <div 
-                  className="absolute text-6xl font-bold text-white animate-pulse"
+                  className="absolute text-6xl font-bold text-teal-300 animate-pulse filter drop-shadow-lg"
                   style={{ 
                     bottom: '-150px', 
                     left: '50%',
@@ -84,23 +88,45 @@ export const Hero = () => {
             </div>
           </div>
         </div>
+
+        {/* Environmental floating elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          {[...Array(8)].map((_, i) => (
+            <div
+              key={`env-${i}`}
+              className={`absolute text-2xl animate-float opacity-60 ${
+                i % 4 === 0 ? 'text-emerald-400' : 
+                i % 4 === 1 ? 'text-blue-400' : 
+                i % 4 === 2 ? 'text-teal-400' : 'text-green-400'
+              }`}
+              style={{
+                left: `${10 + (i * 12)}%`,
+                top: `${20 + (i * 8)}%`,
+                animationDelay: `${i * 0.5}s`,
+                animationDuration: `${3 + (i * 0.3)}s`
+              }}
+            >
+              {i % 4 === 0 ? '🌱' : i % 4 === 1 ? '♻️' : i % 4 === 2 ? '🌿' : '🍃'}
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Enhanced gradient overlay for better text readability */}
-      <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/90 via-zinc-950/40 to-zinc-950/60"></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-blue-950/50 to-emerald-950/60"></div>
 
-      {/* Content */}
+      {/* Content with enhanced earth-inspired styling */}
       <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
         <div className="animate-fade-in">
           <h1 className="text-6xl md:text-8xl font-bold mb-6 tracking-tighter">
-            <span className="block text-white drop-shadow-2xl filter brightness-110 animate-pulse">NO</span>
+            <span className="block text-emerald-300 drop-shadow-2xl filter brightness-110 animate-pulse">NO</span>
             <span className="block text-blue-400 drop-shadow-2xl filter brightness-110 animate-pulse delay-300">PLAN-ET</span>
-            <span className="block text-white drop-shadow-2xl filter brightness-110 animate-pulse delay-500">B</span>
+            <span className="block text-teal-300 drop-shadow-2xl filter brightness-110 animate-pulse delay-500">B</span>
           </h1>
           
-          <p className="text-xl md:text-2xl text-zinc-300 mb-8 max-w-2xl mx-auto leading-relaxed drop-shadow-lg">
+          <p className="text-xl md:text-2xl text-slate-300 mb-8 max-w-2xl mx-auto leading-relaxed drop-shadow-lg">
             Where consciousness meets couture. 
-            <span className="block mt-2 text-zinc-400">
+            <span className="block mt-2 text-emerald-400">
               The future of sustainable fashion is here.
             </span>
           </p>
@@ -109,8 +135,9 @@ export const Hero = () => {
             <Link to="/shop">
               <Button 
                 size="lg" 
-                className="bg-white text-zinc-950 hover:bg-zinc-100 text-lg px-8 py-4 group transition-all duration-300 shadow-2xl"
+                className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-600 hover:to-teal-600 text-lg px-8 py-4 group transition-all duration-300 shadow-2xl border-0"
               >
+                <ShoppingBag className="mr-2 h-5 w-5" />
                 Shop Collection
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
               </Button>
@@ -119,18 +146,19 @@ export const Hero = () => {
             <Button 
               variant="outline" 
               size="lg" 
-              className="border-zinc-600 text-white hover:bg-zinc-800 text-lg px-8 py-4 shadow-xl"
+              className="border-2 border-blue-400 text-blue-300 hover:bg-blue-400/20 hover:text-blue-200 text-lg px-8 py-4 shadow-xl backdrop-blur-sm bg-blue-950/30"
             >
-              Watch Our Story
+              <Eye className="mr-2 h-5 w-5" />
+              View More Products
             </Button>
           </div>
         </div>
       </div>
 
-      {/* Scroll Indicator */}
+      {/* Enhanced scroll indicator with earth colors */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce z-10">
-        <div className="w-6 h-10 border-2 border-zinc-600 rounded-full flex justify-center">
-          <div className="w-1 h-3 bg-zinc-600 rounded-full mt-2 animate-pulse"></div>
+        <div className="w-6 h-10 border-2 border-emerald-400 rounded-full flex justify-center backdrop-blur-sm bg-emerald-950/30">
+          <div className="w-1 h-3 bg-gradient-to-b from-emerald-400 to-teal-400 rounded-full mt-2 animate-pulse"></div>
         </div>
       </div>
     </section>
