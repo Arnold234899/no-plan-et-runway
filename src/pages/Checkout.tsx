@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -28,6 +28,25 @@ const Checkout = () => {
       cardName: ""
     }
   });
+  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light' || savedTheme === 'dark') {
+      setTheme(savedTheme);
+    }
+  }, []);
+
+  useEffect(() => {
+    const root = window.document.documentElement;
+    root.classList.remove('light', 'dark');
+    root.classList.add(theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prevTheme => (prevTheme === 'dark' ? 'light' : 'dark'));
+  };
 
   // Mock product data
   const product = {
@@ -60,8 +79,8 @@ const Checkout = () => {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white">
-      <Navigation />
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
+      <Navigation theme={theme} toggleTheme={toggleTheme} />
       
       <div className="pt-20 px-4 sm:px-6 lg:px-8 pb-20">
         <div className="max-w-6xl mx-auto">

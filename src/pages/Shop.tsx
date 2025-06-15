@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ShoppingBag, ArrowLeft } from "lucide-react";
 import { ProductSorting } from "@/components/shop/ProductSorting";
@@ -21,6 +20,25 @@ type Product = {
 
 const Shop = () => {
   const [sortBy, setSortBy] = useState("newest");
+  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light' || savedTheme === 'dark') {
+      setTheme(savedTheme);
+    }
+  }, []);
+
+  useEffect(() => {
+    const root = window.document.documentElement;
+    root.classList.remove('light', 'dark');
+    root.classList.add(theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+  
+  const toggleTheme = () => {
+    setTheme(prevTheme => (prevTheme === 'dark' ? 'light' : 'dark'));
+  };
 
   const generateMockProducts = (): Product[] => {
     const categories = ["Outerwear", "Tops", "Bottoms", "Dresses", "Accessories"];
@@ -87,8 +105,8 @@ const Shop = () => {
   const sortedProducts = sortProducts(products, sortBy);
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white">
-      <Navigation />
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
+      <Navigation theme={theme} toggleTheme={toggleTheme} />
       
       <div className="pt-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
