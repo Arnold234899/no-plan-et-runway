@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Eye, ShoppingBag } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { EarthBackground } from "@/components/ui/EarthBackground";
 
 interface HeroProps {
   theme: 'light' | 'dark';
@@ -45,111 +46,7 @@ export const Hero = ({ theme }: HeroProps) => {
   return (
     <section className={`relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br ${currentSectionBg} transition-all duration-1000`}>
       
-      {/* Enhanced animated background with earth tones */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-black/10 dark:bg-black/30"></div>
-        
-        {/* Animated particles with earth colors */}
-        <div className="absolute inset-0">
-          {[...Array(60)].map((_, i) => (
-            <div
-              key={i}
-              className={`absolute w-1 h-1 rounded-full animate-pulse opacity-70 ${
-                i % 3 === 0 ? 'bg-blue-600 dark:bg-blue-400' : i % 3 === 1 ? 'bg-emerald-600 dark:bg-emerald-400' : 'bg-teal-600 dark:bg-teal-400'
-              }`}
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 3}s`,
-                animationDuration: `${2 + Math.random() * 2}s`
-              }}
-            />
-          ))}
-        </div>
-
-        {/* Enhanced Earth with environmental elements */}
-        <div className="absolute inset-0">
-          <div 
-            className="absolute transform -translate-x-1/2 -translate-y-1/2 animate-float-around"
-            style={{
-              left: '50%',
-              top: '50%'
-            }}
-          >
-            {/* Large Earth with gradient glow */}
-            <div className="text-[20rem] animate-spin-slow opacity-20 dark:opacity-40 relative filter drop-shadow-2xl">
-              <span className="bg-gradient-to-br from-blue-600 via-emerald-500 to-teal-600 dark:from-blue-400 dark:via-emerald-400 dark:to-teal-500 bg-clip-text text-transparent">
-                🌍
-              </span>
-            </div>
-            
-            {/* Enhanced text positioning with earth-inspired colors */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="relative">
-                {/* NO - positioned top left with earth tone */}
-                <div 
-                  className="absolute text-4xl font-bold text-emerald-700 dark:text-emerald-300 animate-pulse filter drop-shadow-lg"
-                  style={{ 
-                    top: '-120px', 
-                    left: '-150px',
-                    transform: 'translate(-50%, -50%)'
-                  }}
-                >
-                  NO
-                </div>
-                
-                {/* PLAN-ET - positioned top right with ocean blue */}
-                <div 
-                  className="absolute text-5xl font-bold text-blue-700 dark:text-blue-400 animate-pulse filter drop-shadow-lg"
-                  style={{ 
-                    top: '-80px', 
-                    right: '-180px',
-                    transform: 'translate(50%, -50%)',
-                    animationDelay: '0.5s'
-                  }}
-                >
-                  PLAN-ET
-                </div>
-                
-                {/* B - positioned bottom with forest green */}
-                <div 
-                  className="absolute text-6xl font-bold text-teal-700 dark:text-teal-300 animate-pulse filter drop-shadow-lg"
-                  style={{ 
-                    bottom: '-150px', 
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    animationDelay: '1s'
-                  }}
-                >
-                  B
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Environmental floating elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          {[...Array(8)].map((_, i) => (
-            <div
-              key={`env-${i}`}
-              className={`absolute text-2xl animate-float opacity-60 ${
-                i % 4 === 0 ? 'text-emerald-700 dark:text-emerald-400' : 
-                i % 4 === 1 ? 'text-blue-700 dark:text-blue-400' : 
-                i % 4 === 2 ? 'text-teal-700 dark:text-teal-400' : 'text-green-700 dark:text-green-400'
-              }`}
-              style={{
-                left: `${10 + (i * 12)}%`,
-                top: `${20 + (i * 8)}%`,
-                animationDelay: `${i * 0.5}s`,
-                animationDuration: `${3 + (i * 0.3)}s`
-              }}
-            >
-              {i % 4 === 0 ? '🌱' : i % 4 === 1 ? '♻️' : i % 4 === 2 ? '🌿' : '🍃'}
-            </div>
-          ))}
-        </div>
-      </div>
+      <EarthBackground />
 
       {/* Enhanced gradient overlay for better text readability */}
       <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/40 to-transparent"></div>
