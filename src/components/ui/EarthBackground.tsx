@@ -1,6 +1,6 @@
 
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Text3D, OrbitControls, Stars } from '@react-three/drei';
+import { Sphere, Text3D, OrbitControls, Stars } from '@react-three/drei';
 import { useRef } from 'react';
 import * as THREE from 'three';
 
@@ -15,8 +15,7 @@ const Earth = () => {
   });
 
   return (
-    <mesh ref={earthRef} position={[0, 0, -5]}>
-      <sphereGeometry args={[2, 64, 64]} />
+    <Sphere ref={earthRef} args={[2, 64, 64]} position={[0, 0, -5]}>
       <meshStandardMaterial
         color="#4A90E2"
         metalness={0.3}
@@ -24,7 +23,7 @@ const Earth = () => {
         emissive="#1e40af"
         emissiveIntensity={0.1}
       />
-    </mesh>
+    </Sphere>
   );
 };
 
@@ -35,7 +34,7 @@ const FloatingText = ({ text, position, color, size = 0.5 }: {
   size?: number;
 }) => {
   const textRef = useRef<THREE.Group>(null);
-
+  
   useFrame((state) => {
     if (textRef.current) {
       textRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.8) * 0.3;
@@ -77,7 +76,7 @@ const Particles = () => {
 
   const particleCount = 200;
   const positions = new Float32Array(particleCount * 3);
-
+  
   for (let i = 0; i < particleCount; i++) {
     positions[i * 3] = (Math.random() - 0.5) * 20;
     positions[i * 3 + 1] = (Math.random() - 0.5) * 20;

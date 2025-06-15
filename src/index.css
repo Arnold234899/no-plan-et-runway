@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -111,70 +112,5 @@
 
   .forest-gradient {
     background: linear-gradient(135deg, #064e3b 0%, #059669 50%, #10b981 100%);
-  }
-
-  html.earth {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    /* Earth themed colors */
-    --primary: 210 84% 52%;
-    --secondary: 142 76% 36%;
-    background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 30%, #059669 100%);
-  }
-  html.night {
-    --background: 28 21% 13%;
-    --foreground: 210 50% 98%;
-    --primary: 230 50% 30%;
-    --secondary: 230 20% 20%;
-    background: linear-gradient(135deg, #05245e 0%, #000217 80%, #20164e 100%);
-  }
-  /* Auroras and meteors (creative CCS FX) */
-  .aurora-effect {
-    position: fixed;
-    pointer-events: none;
-    left: 0; top: 0; width: 100vw; height: 100vh;
-    z-index: 30;
-    background: radial-gradient(ellipse at 60% 20%, rgba(40,255,227,0.18) 0%, transparent 80%),
-                radial-gradient(ellipse at 20% 60%, rgba(24,131,224,0.1) 0%, transparent 80%),
-                radial-gradient(ellipse at 80% 80%, rgba(96,165,250,0.11) 0%, transparent 70%);
-    animation: aurora-flicker 8s infinite alternate;
-    filter: blur(18px);
-    opacity: 0.7;
-  }
-  @keyframes aurora-flicker {
-    0% { opacity:0.8; }
-    31% { opacity:1; }
-    68% { opacity:0.45; }
-    100% { opacity:0.85;}
-  }
-}
-
-@layer components {
-  /* Add a subtle meteor effect */
-  .meteor {
-    background: linear-gradient(90deg, #4fd1c5 0%, #21d4fd 100%);
-    height: 2px;
-    width: 90px;
-    position: absolute;
-    border-radius: 1px;
-    opacity: 0.7;
-    filter: blur(1.2px);
-    animation: meteor-fly 2s linear infinite;
-  }
-
-  @keyframes meteor-fly {
-    0% {
-      left: -10vw;
-      top: 10vh;
-      opacity: 0;
-    }
-    30%{
-      opacity: 1;
-    }
-    100% {
-      left: 120vw;
-      top: 75vh;
-      opacity: 0;
-    }
   }
 }
