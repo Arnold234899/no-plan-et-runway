@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ShoppingBag, ArrowLeft } from "lucide-react";
@@ -5,6 +6,7 @@ import { ProductSorting } from "@/components/shop/ProductSorting";
 import { Navigation } from "@/components/layout/Navigation";
 import { Footer } from "@/components/layout/Footer";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 type Product = {
   id: number;
@@ -104,8 +106,40 @@ const Shop = () => {
 
   const sortedProducts = sortProducts(products, sortBy);
 
+  const productListSchema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Shop Collection",
+    "description": "The complete collection of sustainable fashion from NO PLAN-ET B.",
+    "url": "https://noplanetb.com/shop",
+    "numberOfItems": products.length,
+    "itemListElement": products.map((product, index) => ({
+      "@type": "ListItem",
+      "position": index + 1,
+      "item": {
+        "@type": "Product",
+        "url": `https://noplanetb.com/checkout/${product.id}`,
+        "name": product.name,
+        "image": product.image,
+        "offers": {
+          "@type": "Offer",
+          "priceCurrency": "USD",
+          "price": product.price.toFixed(2)
+        }
+      }
+    }))
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
+      <Helmet>
+        <title>Shop Collection - NO PLAN-ET B</title>
+        <meta name="description" content="Discover our complete range of sustainable fashion pieces. Shop outerwear, tops, bottoms, and more from NO PLAN-ET B." />
+        <link rel="canonical" href="https://noplanetb.com/shop" />
+        <script type="application/ld+json">
+          {JSON.stringify(productListSchema)}
+        </script>
+      </Helmet>
       <Navigation theme={theme} toggleTheme={toggleTheme} />
       
       <div className="pt-20 px-4 sm:px-6 lg:px-8">
@@ -139,6 +173,7 @@ const Shop = () => {
                   <img
                     src={product.image}
                     alt={product.name}
+                    loading="lazy"
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                   />
                   

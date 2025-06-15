@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { Hero } from "@/components/sections/Hero";
@@ -11,6 +12,7 @@ import { Contact } from "@/components/sections/Contact";
 import { Navigation } from "@/components/layout/Navigation";
 import { Footer } from "@/components/layout/Footer";
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
+import { featuredProducts } from "@/data/products";
 
 const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -42,6 +44,28 @@ const Index = () => {
     return <LoadingScreen onComplete={handleLoadingComplete} />;
   }
 
+  const productSchemas = featuredProducts.map(product => ({
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": product.name,
+    "image": product.image,
+    "description": `A ${product.sustainable ? 'sustainable' : ''} ${product.name.toLowerCase()} in the ${product.category.toLowerCase()} category.`,
+    "sku": `NPB-${product.id}`,
+    "mpn": `NPB-${product.id}`,
+    "brand": {
+      "@type": "Brand",
+      "name": "NO PLAN-ET B"
+    },
+    "offers": {
+      "@type": "Offer",
+      "url": `https://noplanetb.com/checkout/${product.id}`,
+      "priceCurrency": "USD",
+      "price": product.price.toFixed(2),
+      "availability": "https://schema.org/InStock",
+      "itemCondition": "https://schema.org/NewCondition"
+    }
+  }));
+
   return (
     <>
       <Helmet>
@@ -69,6 +93,11 @@ const Index = () => {
             ]
           })}
         </script>
+        {productSchemas.map((schema, index) => (
+          <script type="application/ld+json" key={`product-schema-${index}`}>
+            {JSON.stringify(schema)}
+          </script>
+        ))}
       </Helmet>
       <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
         <Navigation theme={theme} toggleTheme={toggleTheme} />
