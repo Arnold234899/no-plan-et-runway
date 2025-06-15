@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { Hero } from "@/components/sections/Hero";
@@ -72,8 +71,8 @@ const Index = () => {
         </script>
       </Helmet>
       <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
-        <Navigation />
-        <Hero theme={theme} toggleTheme={toggleTheme} />
+        <Navigation theme={theme} toggleTheme={toggleTheme} />
+        <Hero theme={theme} />
         <Promotions />
         <FeaturedProducts />
         <BrandMission />

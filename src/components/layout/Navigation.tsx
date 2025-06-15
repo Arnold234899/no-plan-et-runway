@@ -2,8 +2,14 @@
 import { useState } from "react";
 import { Menu, X, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
-export const Navigation = () => {
+interface NavigationProps {
+  theme: 'light' | 'dark';
+  toggleTheme: () => void;
+}
+
+export const Navigation = ({ theme, toggleTheme }: NavigationProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const navItems = [
@@ -41,8 +47,8 @@ export const Navigation = () => {
             </div>
           </div>
 
-          {/* Enhanced Shopping Cart with earth colors */}
-          <div className="hidden md:block">
+          {/* Desktop Actions */}
+          <div className="hidden md:flex items-center gap-4">
             <Button 
               variant="ghost" 
               size="sm" 
@@ -51,16 +57,19 @@ export const Navigation = () => {
               <ShoppingBag className="h-5 w-5 group-hover:text-teal-400 transition-colors duration-300" />
               <span className="ml-2">Cart (0)</span>
             </Button>
+            <ThemeToggle theme={theme} onToggle={toggleTheme} />
           </div>
 
-          {/* Mobile menu button with earth styling */}
-          <div className="md:hidden">
+          {/* Mobile menu button */}
+          <div className="flex items-center gap-2 md:hidden">
+            <ThemeToggle theme={theme} onToggle={toggleTheme} />
             <Button
               variant="ghost"
-              size="sm"
+              size="icon"
               onClick={() => setIsOpen(!isOpen)}
               className="text-white hover:text-emerald-400 hover:bg-emerald-900/30 transition-all duration-300 border border-emerald-400/20"
             >
+              <span className="sr-only">Open main menu</span>
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </Button>
           </div>

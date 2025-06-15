@@ -1,16 +1,13 @@
-
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Eye, ShoppingBag } from "lucide-react";
 import { Link } from "react-router-dom";
-import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { useEffect, useState } from "react";
 
 interface HeroProps {
   theme: 'light' | 'dark';
-  toggleTheme: () => void;
 }
 
-export const Hero = ({ theme, toggleTheme }: HeroProps) => {
+export const Hero = ({ theme }: HeroProps) => {
   const [period, setPeriod] = useState<'morning' | 'afternoon' | 'evening'>('evening');
   const [greeting, setGreeting] = useState('');
 
@@ -47,9 +44,6 @@ export const Hero = ({ theme, toggleTheme }: HeroProps) => {
 
   return (
     <section className={`relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br ${currentSectionBg} transition-all duration-1000`}>
-      <div className="absolute top-6 right-6 z-30">
-        <ThemeToggle theme={theme} onToggle={toggleTheme} />
-      </div>
       
       {/* Enhanced animated background with earth tones */}
       <div className="absolute inset-0">
