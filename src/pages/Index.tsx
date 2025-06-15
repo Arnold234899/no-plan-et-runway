@@ -1,5 +1,4 @@
-
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Hero } from "@/components/sections/Hero";
 import { Promotions } from "@/components/sections/Promotions";
@@ -12,13 +11,14 @@ import { Contact } from "@/components/sections/Contact";
 import { Navigation } from "@/components/layout/Navigation";
 import { Footer } from "@/components/layout/Footer";
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
+import { EarthBackground } from "@/components/ui/EarthBackground";
+import { ImpactStatsBar } from "@/components/sections/ImpactStatsBar";
+import { DayNightToggle } from "@/components/ui/DayNightToggle";
 
 const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
 
-  const handleLoadingComplete = () => {
-    setIsLoading(false);
-  };
+  const handleLoadingComplete = () => setIsLoading(false);
 
   if (isLoading) {
     return <LoadingScreen onComplete={handleLoadingComplete} />;
@@ -52,20 +52,39 @@ const Index = () => {
           })}
         </script>
       </Helmet>
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-emerald-950 text-white">
-        <Navigation />
-        <Hero />
+      {/* LIVE IMPACT BANNER */}
+      <ImpactStatsBar />
+      {/* HERO WITH 3D EARTH BACKGROUND */}
+      <div className="relative min-h-screen bg-gradient-to-br from-blue-950 via-slate-950 to-emerald-950 overflow-hidden">
+        <EarthBackground />
+        <div className="relative z-10">
+          <Navigation />
+          <Hero />
+        </div>
+      </div>
+      {/* Smoothed Section Transitions */}
+      <div className="ocean-gradient">
         <Promotions />
+      </div>
+      <div className="forest-gradient">
         <FeaturedProducts />
+      </div>
+      <div className="bg-gradient-to-br from-emerald-950/60 via-slate-900 to-blue-950/60">
         <BrandMission />
+      </div>
+      <div className="earth-gradient">
         <Gallery />
+      </div>
+      <div className="bg-gradient-to-r from-blue-950/70 via-slate-950/90 to-emerald-950/70">
         <Influencers />
-        <div className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-950/50 via-slate-950/80 to-emerald-950/50">
+        <div className="py-20 px-4 sm:px-6 lg:px-8">
           <InfluencerApplicationForm />
         </div>
         <Contact />
         <Footer />
       </div>
+      {/* INTERACTIVE EARTH/NIGHT TOGGLE */}
+      <DayNightToggle />
     </>
   );
 };
