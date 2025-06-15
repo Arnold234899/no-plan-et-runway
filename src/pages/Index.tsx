@@ -15,6 +15,25 @@ import { LoadingScreen } from "@/components/ui/LoadingScreen";
 
 const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light' || savedTheme === 'dark') {
+      setTheme(savedTheme);
+    }
+  }, []);
+
+  useEffect(() => {
+    const root = window.document.documentElement;
+    root.classList.remove('light', 'dark');
+    root.classList.add(theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+  
+  const toggleTheme = () => {
+    setTheme(prevTheme => (prevTheme === 'dark' ? 'light' : 'dark'));
+  };
 
   const handleLoadingComplete = () => {
     setIsLoading(false);
@@ -52,9 +71,9 @@ const Index = () => {
           })}
         </script>
       </Helmet>
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-emerald-950 text-white">
+      <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
         <Navigation />
-        <Hero />
+        <Hero theme={theme} toggleTheme={toggleTheme} />
         <Promotions />
         <FeaturedProducts />
         <BrandMission />
