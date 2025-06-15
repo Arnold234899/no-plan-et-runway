@@ -1,4 +1,3 @@
-
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Sphere, OrbitControls, Stars } from '@react-three/drei';
 import { useRef } from 'react';
@@ -73,7 +72,7 @@ const Particles = () => {
     <points ref={particlesRef}>
       <bufferGeometry>
         <bufferAttribute
-          attach="attributes-position"
+          attach="position"
           count={particleCount}
           array={positions}
           itemSize={3}
