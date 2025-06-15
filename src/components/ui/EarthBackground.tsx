@@ -86,7 +86,7 @@ const Particles = () => {
 export const EarthBackground = () => {
   return (
     <div className="absolute inset-0 w-full h-full">
-      <Canvas camera={{ position: [0, 0, 10], fov: 75 }}>
+      <Canvas camera={{ position: [0, 0, 10] }}>
         <ambientLight intensity={0.3} />
         <directionalLight position={[10, 10, 5]} intensity={1} color="#ffffff" />
         <pointLight position={[-10, -10, -5]} intensity={0.5} color="#3B82F6" />
