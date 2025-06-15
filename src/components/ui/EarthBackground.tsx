@@ -1,3 +1,4 @@
+
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Sphere, OrbitControls, Stars } from '@react-three/drei';
 import { useRef } from 'react';
@@ -97,7 +98,6 @@ export const EarthBackground = () => {
           count={5000}
           factor={4}
           saturation={0}
-          fade={true}
         />
         
         <Earth />
