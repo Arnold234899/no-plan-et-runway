@@ -1,9 +1,20 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ShoppingBag } from "lucide-react";
 import { ProductSorting } from "@/components/shop/ProductSorting";
 import { featuredProducts, Product } from "@/data/products";
+
+type Product = {
+  id: number;
+  name: string;
+  price: number;
+  priceDisplay: string;
+  image: string;
+  category: string;
+  sustainable: boolean;
+  isNew: boolean;
+  bestseller: boolean;
+};
 
 export const FeaturedProducts = () => {
   const [sortBy, setSortBy] = useState("newest");
