@@ -1,4 +1,3 @@
-
 import { Helmet } from "react-helmet-async";
 import { Navigation } from "@/components/layout/Navigation";
 import { Footer } from "@/components/layout/Footer";
@@ -73,6 +72,31 @@ const Lerai = () => {
                 where conscious choices create lasting impact, and where every outfit tells 
                 a story of environmental responsibility and authentic self-expression.
               </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Video Section */}
+        <section className="py-16 px-4 sm:px-6 lg:px-8 bg-zinc-950">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 tracking-tight">
+                Meet Lerai in Action
+              </h2>
+              <p className="text-lg text-zinc-400">
+                Watch Lerai embody the NO PLAN-ET B vision of sustainable fashion
+              </p>
+            </div>
+            
+            <div className="relative rounded-lg overflow-hidden shadow-2xl">
+              <video
+                className="w-full h-auto"
+                controls
+                poster="/lovable-uploads/b6e15c48-3ee5-47d5-91f3-7c3bea348a6a.png"
+              >
+                <source src="/videos/lerai-brand-ambassador.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
             </div>
           </div>
         </section>
