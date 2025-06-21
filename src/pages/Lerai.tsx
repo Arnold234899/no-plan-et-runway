@@ -30,6 +30,18 @@ const Lerai = () => {
       image: "/lovable-uploads/92174a9d-2efd-4362-8157-5d5b355093c4.png",
       type: "Brand Ambassador",
     },
+    {
+      id: 5,
+      title: "Lerai - Contemporary Street Style",
+      image: "/lovable-uploads/795c525b-bac1-414a-8fd5-b78d5316ab6c.png",
+      type: "Brand Ambassador Feature",
+    },
+    {
+      id: 6,
+      title: "Lerai - Artistic Fashion Expression",
+      image: "/lovable-uploads/254de182-44ca-4998-9068-3d79305bab6f.png",
+      type: "Brand Ambassador Feature",
+    },
   ];
 
   return (
