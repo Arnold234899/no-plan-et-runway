@@ -134,7 +134,7 @@ const Lerai = () => {
               >
                 <source src="/videos/lerai-brand-ambassador.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
-              </source>
+              </video>
             </div>
           </div>
         </section>
