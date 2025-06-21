@@ -1,19 +1,21 @@
+
 import { Helmet } from "react-helmet-async";
 import { Navigation } from "@/components/layout/Navigation";
 import { Footer } from "@/components/layout/Footer";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
 const Lerai = () => {
   const leraiGallery = [
     {
       id: 1,
-      title: "Brand Ambassador Lerai - Style Statement",
-      image: "/lovable-uploads/b6e15c48-3ee5-47d5-91f3-7c3bea348a6a.png",
+      title: "Lerai - Industrial Style Statement",
+      image: "/lovable-uploads/36667570-40cc-476f-9c0b-65fd119186b6.png",
       type: "Brand Ambassador Feature",
     },
     {
       id: 2,
-      title: "Brand Ambassador Lerai - Fashion Forward",
-      image: "/lovable-uploads/92174a9d-2efd-4362-8157-5d5b355093c4.png",
+      title: "Lerai - Urban Fashion Forward",
+      image: "/lovable-uploads/0d8e7c98-78d0-4374-ba24-55383045f7c0.png",
       type: "Brand Ambassador Feature",
     },
     {
@@ -25,18 +27,6 @@ const Lerai = () => {
     {
       id: 4,
       title: "Lerai - Conscious Style Leader",
-      image: "/lovable-uploads/92174a9d-2efd-4362-8157-5d5b355093c4.png",
-      type: "Brand Ambassador",
-    },
-    {
-      id: 5,
-      title: "Lerai - NO PLAN-ET B Ambassador",
-      image: "/lovable-uploads/b6e15c48-3ee5-47d5-91f3-7c3bea348a6a.png",
-      type: "Collaboration",
-    },
-    {
-      id: 6,
-      title: "Lerai - Future of Fashion",
       image: "/lovable-uploads/92174a9d-2efd-4362-8157-5d5b355093c4.png",
       type: "Brand Ambassador",
     },
@@ -76,6 +66,54 @@ const Lerai = () => {
           </div>
         </section>
 
+        {/* Gallery Section */}
+        <section className="py-20 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
+                Gallery
+              </h2>
+              <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
+                Celebrating Lerai's journey as our brand ambassador and sustainable fashion leader.
+              </p>
+            </div>
+
+            <div className="max-w-4xl mx-auto">
+              <Carousel className="w-full">
+                <CarouselContent>
+                  {leraiGallery.map((item) => (
+                    <CarouselItem key={item.id}>
+                      <div className="group relative overflow-hidden rounded-lg">
+                        <div className="aspect-[4/3] overflow-hidden">
+                          <img
+                            src={item.image}
+                            alt={item.title}
+                            loading="lazy"
+                            className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700"
+                          />
+                          
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                          
+                          <div className="absolute inset-0 flex flex-col justify-end p-6 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <p className="text-yellow-400 text-sm mb-1 font-semibold">
+                              {item.type}
+                            </p>
+                            <h3 className="font-semibold text-xl">
+                              {item.title}
+                            </h3>
+                          </div>
+                        </div>
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="left-4" />
+                <CarouselNext className="right-4" />
+              </Carousel>
+            </div>
+          </div>
+        </section>
+
         {/* Video Section */}
         <section className="py-16 px-4 sm:px-6 lg:px-8 bg-zinc-950">
           <div className="max-w-4xl mx-auto">
@@ -96,55 +134,7 @@ const Lerai = () => {
               >
                 <source src="/videos/lerai-brand-ambassador.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
-              </video>
-            </div>
-          </div>
-        </section>
-
-        {/* Gallery Section */}
-        <section className="py-20 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
-                Gallery
-              </h2>
-              <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
-                Celebrating Lerai's journey as our brand ambassador and sustainable fashion leader.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {leraiGallery.map((item, index) => (
-                <div
-                  key={item.id}
-                  className={`group relative overflow-hidden rounded-lg cursor-pointer hover:scale-105 transition-transform duration-500 ${
-                    index === 0 || index === 1 ? 'md:col-span-2 md:row-span-2' : ''
-                  }`}
-                >
-                  <div className={`${
-                    index === 0 || index === 1 ? 'aspect-[4/3]' : 'aspect-[3/4]'
-                  } overflow-hidden`}>
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      loading="lazy"
-                      className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700"
-                      style={{ objectPosition: 'center 20%' }}
-                    />
-                    
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    
-                    <div className="absolute inset-0 flex flex-col justify-end p-6 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <p className="text-yellow-400 text-sm mb-1 font-semibold">
-                        {item.type}
-                      </p>
-                      <h3 className="font-semibold text-xl">
-                        {item.title}
-                      </h3>
-                    </div>
-                  </div>
-                </div>
-              ))}
+              </source>
             </div>
           </div>
         </section>
