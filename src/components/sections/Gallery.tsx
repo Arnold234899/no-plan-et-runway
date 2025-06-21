@@ -3,26 +3,26 @@ export const Gallery = () => {
   const galleryItems = [
     {
       id: 1,
+      title: "Urban Collection",
+      image: "/lovable-uploads/0905d31a-b001-441b-bb04-07b3ee90a7d3.png",
+      type: "Featured Campaign",
+    },
+    {
+      id: 2,
+      title: "Studio Portrait",
+      image: "/lovable-uploads/c3c00612-53b0-4814-ba26-b7308a5cef69.png",
+      type: "Featured Collection",
+    },
+    {
+      id: 3,
       title: "FW23 Runway Show",
       image: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=600&h=800&fit=crop",
       type: "Fashion Show",
     },
     {
-      id: 2,
+      id: 4,
       title: "Sustainable Studio",
       image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&h=400&fit=crop",
-      type: "Behind the Scenes",
-    },
-    {
-      id: 3,
-      title: "Urban Collection",
-      image: "/lovable-uploads/0905d31a-b001-441b-bb04-07b3ee90a7d3.png",
-      type: "Campaign",
-    },
-    {
-      id: 4,
-      title: "Studio Portrait",
-      image: "/lovable-uploads/c3c00612-53b0-4814-ba26-b7308a5cef69.png",
       type: "Behind the Scenes",
     },
     {
@@ -63,15 +63,20 @@ export const Gallery = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {galleryItems.map((item, index) => (
             <div
               key={item.id}
               className={`group relative overflow-hidden rounded-lg cursor-pointer hover:scale-105 transition-transform duration-500 ${
-                index === 0 || index === 4 ? 'md:row-span-2' : ''
+                index === 0 ? 'md:col-span-2 md:row-span-2' : 
+                index === 1 ? 'md:col-span-2 md:row-span-2' : 
+                index === 2 || index === 4 ? 'md:row-span-2' : ''
               }`}
             >
-              <div className={`${index === 0 || index === 4 ? 'aspect-[3/4]' : 'aspect-[4/3]'} overflow-hidden`}>
+              <div className={`${
+                index === 0 || index === 1 ? 'aspect-[4/3]' : 
+                index === 2 || index === 4 ? 'aspect-[3/4]' : 'aspect-[4/3]'
+              } overflow-hidden`}>
                 <img
                   src={item.image}
                   alt={item.title}
@@ -84,8 +89,12 @@ export const Gallery = () => {
                 
                 {/* Content */}
                 <div className="absolute inset-0 flex flex-col justify-end p-6 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <p className="text-zinc-300 text-sm mb-1">{item.type}</p>
-                  <h3 className="text-xl font-semibold">{item.title}</h3>
+                  <p className={`text-zinc-300 text-sm mb-1 ${index === 0 || index === 1 ? 'text-yellow-400 font-semibold' : ''}`}>
+                    {item.type}
+                  </p>
+                  <h3 className={`font-semibold ${index === 0 || index === 1 ? 'text-2xl' : 'text-xl'}`}>
+                    {item.title}
+                  </h3>
                 </div>
               </div>
             </div>
