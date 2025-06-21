@@ -60,7 +60,7 @@ export const Gallery = () => {
                   loading="lazy"
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                   style={{ 
-                    objectPosition: index >= 2 ? 'center 40%' : 'center 30%' 
+                    objectPosition: index >= 2 ? 'center 50%' : 'center 40%' 
                   }}
                 />
                 
