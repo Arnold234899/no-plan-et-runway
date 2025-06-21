@@ -1,4 +1,3 @@
-
 export const Gallery = () => {
   const galleryItems = [
     {
@@ -89,7 +88,10 @@ export const Gallery = () => {
                   src={item.image}
                   alt={item.title}
                   loading="lazy"
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  className={`w-full h-full group-hover:scale-110 transition-transform duration-700 ${
+                    index === 0 ? 'object-cover object-center' : 'object-cover'
+                  }`}
+                  style={index === 0 ? { objectPosition: 'center 20%' } : {}}
                 />
                 
                 {/* Overlay */}
