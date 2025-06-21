@@ -89,15 +89,13 @@ export const Gallery = () => {
                   alt={item.title}
                   loading="lazy"
                   className={`w-full h-full group-hover:scale-110 transition-transform duration-700 ${
-                    index === 0 ? 'object-cover object-center' : 'object-cover'
+                    index === 0 || index === 1 ? 'object-cover object-center' : 'object-cover'
                   }`}
-                  style={index === 0 ? { objectPosition: 'center 20%' } : {}}
+                  style={(index === 0 || index === 1) ? { objectPosition: 'center 20%' } : {}}
                 />
                 
-                {/* Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 
-                {/* Content */}
                 <div className="absolute inset-0 flex flex-col justify-end p-6 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <p className={`text-zinc-300 text-sm mb-1 ${index === 0 || index === 1 ? 'text-yellow-400 font-semibold' : ''}`}>
                     {item.type}
