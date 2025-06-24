@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import Shop from "./pages/Shop";
 import Checkout from "./pages/Checkout";
 import Lerai from "./pages/Lerai";
+import BrandAmbassador from "./pages/BrandAmbassador";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,6 +26,7 @@ const App = () => (
             <Route path="/shop" element={<Shop />} />
             <Route path="/checkout/:productId" element={<Checkout />} />
             <Route path="/lerai" element={<Lerai />} />
+            <Route path="/brand-ambassador" element={<BrandAmbassador />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

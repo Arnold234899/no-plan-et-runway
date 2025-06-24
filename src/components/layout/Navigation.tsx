@@ -16,6 +16,7 @@ export const Navigation = ({ theme, toggleTheme }: NavigationProps) => {
     { name: "Shop", href: "#shop" },
     { name: "Gallery", href: "#gallery" },
     { name: "About", href: "#about" },
+    { name: "Brand Ambassador", href: "/brand-ambassador" },
     { name: "Influencers", href: "#influencers" },
     { name: "Contact", href: "#contact" },
   ];
