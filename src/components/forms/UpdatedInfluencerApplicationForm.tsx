@@ -1,118 +1,123 @@
 
-import { useState } from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/integrations/supabase/client';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { toast } from 'sonner';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 
 export const UpdatedInfluencerApplicationForm = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    instagramHandle: '',
-    tiktokHandle: '',
-    followersCount: '',
-    whyInterested: '',
-    collaborationIdeas: '',
+    name: "",
+    email: "",
+    instagram_handle: "",
+    tiktok_handle: "",
+    followers_count: "",
+    why_interested: "",
+    collaboration_ideas: ""
   });
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { user } = useAuth();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    setIsLoading(true);
 
     try {
-      const { error } = await supabase
+      // Save influencer application to database
+      const { error: dbError } = await supabase
         .from('influencer_applications')
-        .insert({
+        .insert([{
           user_id: user?.id || null,
           name: formData.name,
           email: formData.email,
-          instagram_handle: formData.instagramHandle || null,
-          tiktok_handle: formData.tiktokHandle || null,
-          followers_count: formData.followersCount ? parseInt(formData.followersCount) : null,
-          why_interested: formData.whyInterested || null,
-          collaboration_ideas: formData.collaborationIdeas || null,
-        });
+          instagram_handle: formData.instagram_handle || null,
+          tiktok_handle: formData.tiktok_handle || null,
+          followers_count: formData.followers_count ? parseInt(formData.followers_count) : null,
+          why_interested: formData.why_interested || null,
+          collaboration_ideas: formData.collaboration_ideas || null
+        }]);
 
-      if (error) throw error;
+      if (dbError) throw dbError;
 
-      toast.success('Application submitted successfully! We\'ll review it and get back to you.');
+      // Send confirmation email to applicant
+      const { error: emailError } = await supabase.functions.invoke('send-email', {
+        body: {
+          type: 'influencer',
+          to: formData.email,
+          data: formData
+        }
+      });
+
+      if (emailError) {
+        console.error('Email error:', emailError);
+        toast.success("Application submitted successfully! (Confirmation email may be delayed)");
+      } else {
+        toast.success("Application submitted successfully! Check your email for confirmation.");
+      }
+
+      // Reset form
       setFormData({
-        name: '',
-        email: '',
-        instagramHandle: '',
-        tiktokHandle: '',
-        followersCount: '',
-        whyInterested: '',
-        collaborationIdeas: '',
+        name: "",
+        email: "",
+        instagram_handle: "",
+        tiktok_handle: "",
+        followers_count: "",
+        why_interested: "",
+        collaboration_ideas: ""
       });
     } catch (error) {
-      console.error('Error submitting application:', error);
-      toast.error('Failed to submit application. Please try again.');
+      console.error('Influencer application error:', error);
+      toast.error("Failed to submit application. Please try again.");
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="max-w-4xl mx-auto">
-      <div className="text-center mb-12">
-        <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-          Become a Brand Ambassador
-        </h2>
-        <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
-          Join our mission to revolutionize sustainable fashion. We're looking for passionate individuals who share our vision of conscious style.
-        </p>
-      </div>
-
-      <Card className="bg-zinc-900/80 border-zinc-800 backdrop-blur-sm">
-        <CardHeader>
-          <CardTitle className="text-2xl text-white text-center">
-            Influencer Application
+      <Card className="bg-zinc-900/95 border-emerald-400/20 backdrop-blur-sm">
+        <CardHeader className="text-center">
+          <CardTitle className="text-3xl font-bold bg-gradient-to-r from-emerald-400 via-blue-400 to-teal-400 bg-clip-text text-transparent">
+            Become a Brand Ambassador
           </CardTitle>
+          <CardDescription className="text-zinc-300 text-lg">
+            Join our mission to revolutionize sustainable fashion and inspire conscious choices.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <Label htmlFor="name" className="text-zinc-300 text-sm font-medium mb-2 block">
-                  Full Name *
-                </Label>
+                <Label htmlFor="name" className="text-emerald-400 font-semibold">Full Name *</Label>
                 <Input
-                  type="text"
                   id="name"
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="bg-zinc-800 border-zinc-700 text-white focus:ring-white focus:border-white"
+                  className="bg-zinc-800/50 border-emerald-400/30 text-white focus:border-emerald-400"
                   required
                 />
               </div>
-
               <div>
-                <Label htmlFor="email" className="text-zinc-300 text-sm font-medium mb-2 block">
-                  Email Address *
-                </Label>
+                <Label htmlFor="email" className="text-emerald-400 font-semibold">Email Address *</Label>
                 <Input
-                  type="email"
                   id="email"
                   name="email"
+                  type="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="bg-zinc-800 border-zinc-700 text-white focus:ring-white focus:border-white"
+                  className="bg-zinc-800/50 border-emerald-400/30 text-white focus:border-emerald-400"
                   required
                 />
               </div>
@@ -120,87 +125,72 @@ export const UpdatedInfluencerApplicationForm = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <Label htmlFor="instagramHandle" className="text-zinc-300 text-sm font-medium mb-2 block">
-                  Instagram Handle
-                </Label>
+                <Label htmlFor="instagram_handle" className="text-emerald-400 font-semibold">Instagram Handle</Label>
                 <Input
-                  type="text"
-                  id="instagramHandle"
-                  name="instagramHandle"
-                  value={formData.instagramHandle}
-                  onChange={handleChange}
+                  id="instagram_handle"
+                  name="instagram_handle"
                   placeholder="@yourusername"
-                  className="bg-zinc-800 border-zinc-700 text-white focus:ring-white focus:border-white"
+                  value={formData.instagram_handle}
+                  onChange={handleChange}
+                  className="bg-zinc-800/50 border-emerald-400/30 text-white focus:border-emerald-400"
                 />
               </div>
-
               <div>
-                <Label htmlFor="tiktokHandle" className="text-zinc-300 text-sm font-medium mb-2 block">
-                  TikTok Handle
-                </Label>
+                <Label htmlFor="tiktok_handle" className="text-emerald-400 font-semibold">TikTok Handle</Label>
                 <Input
-                  type="text"
-                  id="tiktokHandle"
-                  name="tiktokHandle"
-                  value={formData.tiktokHandle}
-                  onChange={handleChange}
+                  id="tiktok_handle"
+                  name="tiktok_handle"
                   placeholder="@yourusername"
-                  className="bg-zinc-800 border-zinc-700 text-white focus:ring-white focus:border-white"
+                  value={formData.tiktok_handle}
+                  onChange={handleChange}
+                  className="bg-zinc-800/50 border-emerald-400/30 text-white focus:border-emerald-400"
                 />
               </div>
             </div>
 
             <div>
-              <Label htmlFor="followersCount" className="text-zinc-300 text-sm font-medium mb-2 block">
-                Total Followers (combined)
-              </Label>
+              <Label htmlFor="followers_count" className="text-emerald-400 font-semibold">Total Followers Count</Label>
               <Input
+                id="followers_count"
+                name="followers_count"
                 type="number"
-                id="followersCount"
-                name="followersCount"
-                value={formData.followersCount}
+                placeholder="e.g., 10000"
+                value={formData.followers_count}
                 onChange={handleChange}
-                placeholder="10000"
-                className="bg-zinc-800 border-zinc-700 text-white focus:ring-white focus:border-white"
+                className="bg-zinc-800/50 border-emerald-400/30 text-white focus:border-emerald-400"
               />
             </div>
 
             <div>
-              <Label htmlFor="whyInterested" className="text-zinc-300 text-sm font-medium mb-2 block">
-                Why are you interested in NO PLAN-ET B?
-              </Label>
-              <textarea
-                id="whyInterested"
-                name="whyInterested"
-                value={formData.whyInterested}
-                onChange={handleChange}
+              <Label htmlFor="why_interested" className="text-emerald-400 font-semibold">Why are you interested in partnering with NO PLAN-ET B?</Label>
+              <Textarea
+                id="why_interested"
+                name="why_interested"
                 rows={4}
-                className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent resize-none"
-                placeholder="Tell us about your passion for sustainable fashion..."
+                value={formData.why_interested}
+                onChange={handleChange}
+                className="bg-zinc-800/50 border-emerald-400/30 text-white focus:border-emerald-400"
               />
             </div>
 
             <div>
-              <Label htmlFor="collaborationIdeas" className="text-zinc-300 text-sm font-medium mb-2 block">
-                Collaboration Ideas
-              </Label>
-              <textarea
-                id="collaborationIdeas"
-                name="collaborationIdeas"
-                value={formData.collaborationIdeas}
-                onChange={handleChange}
+              <Label htmlFor="collaboration_ideas" className="text-emerald-400 font-semibold">What collaboration ideas do you have?</Label>
+              <Textarea
+                id="collaboration_ideas"
+                name="collaboration_ideas"
                 rows={4}
-                className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent resize-none"
-                placeholder="Share your ideas for promoting sustainable fashion..."
+                value={formData.collaboration_ideas}
+                onChange={handleChange}
+                className="bg-zinc-800/50 border-emerald-400/30 text-white focus:border-emerald-400"
               />
             </div>
 
-            <Button
-              type="submit"
-              className="w-full bg-gradient-to-r from-yellow-400 to-amber-400 text-black font-semibold py-3 text-lg hover:from-yellow-500 hover:to-amber-500 transition-all duration-300"
-              disabled={loading}
+            <Button 
+              type="submit" 
+              className="w-full bg-gradient-to-r from-emerald-600 to-blue-600 hover:from-emerald-700 hover:to-blue-700 text-white font-semibold py-3 text-lg"
+              disabled={isLoading}
             >
-              {loading ? 'Submitting Application...' : 'Submit Application'}
+              {isLoading ? "Submitting Application..." : "Apply to Become a Brand Ambassador"}
             </Button>
           </form>
         </CardContent>

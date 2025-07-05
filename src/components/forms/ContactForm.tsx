@@ -1,123 +1,147 @@
 
-import { useState } from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/integrations/supabase/client';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { toast } from 'sonner';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 
 export const ContactForm = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [subject, setSubject] = useState('');
-  const [message, setMessage] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: ""
+  });
+  const [isLoading, setIsLoading] = useState(false);
   const { user } = useAuth();
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    setIsLoading(true);
 
     try {
-      const { error } = await supabase
+      // Save contact message to database
+      const { error: dbError } = await supabase
         .from('contact_messages')
-        .insert({
+        .insert([{
           user_id: user?.id || null,
-          name,
-          email,
-          subject: subject || null,
-          message,
-        });
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message
+        }]);
 
-      if (error) throw error;
+      if (dbError) throw dbError;
 
-      toast.success('Message sent successfully! We\'ll get back to you soon.');
-      setName('');
-      setEmail('');
-      setSubject('');
-      setMessage('');
+      // Send confirmation email to user
+      const { error: emailError } = await supabase.functions.invoke('send-email', {
+        body: {
+          type: 'contact',
+          to: formData.email,
+          data: formData
+        }
+      });
+
+      if (emailError) {
+        console.error('Email error:', emailError);
+        toast.success("Message sent successfully! (Confirmation email may be delayed)");
+      } else {
+        toast.success("Message sent successfully! Check your email for confirmation.");
+      }
+
+      // Reset form
+      setFormData({
+        name: "",
+        email: "",
+        subject: "",
+        message: ""
+      });
     } catch (error) {
-      console.error('Error sending message:', error);
-      toast.error('Failed to send message. Please try again.');
+      console.error('Contact form error:', error);
+      toast.error("Failed to send message. Please try again.");
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   return (
     <Card className="bg-zinc-900 border-zinc-800">
       <CardHeader>
-        <CardTitle className="text-white text-2xl">Send us a Message</CardTitle>
+        <CardTitle className="text-white">Get in Touch</CardTitle>
+        <CardDescription className="text-zinc-400">
+          Send us a message and we'll get back to you as soon as possible.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <Label htmlFor="name" className="block text-zinc-300 text-sm font-medium mb-2">
-              Full Name
-            </Label>
-            <Input
-              type="text"
-              id="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Your name"
-              className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-              required
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="name" className="text-zinc-300">Name</Label>
+              <Input
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                className="bg-zinc-800 border-zinc-700 text-white"
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="email" className="text-zinc-300">Email</Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                className="bg-zinc-800 border-zinc-700 text-white"
+                required
+              />
+            </div>
           </div>
           
           <div>
-            <Label htmlFor="email" className="block text-zinc-300 text-sm font-medium mb-2">
-              Email Address
-            </Label>
+            <Label htmlFor="subject" className="text-zinc-300">Subject</Label>
             <Input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="your.email@example.com"
-              className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-              required
-            />
-          </div>
-          
-          <div>
-            <Label htmlFor="subject" className="block text-zinc-300 text-sm font-medium mb-2">
-              Subject
-            </Label>
-            <Input
-              type="text"
               id="subject"
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-              placeholder="What's this about?"
-              className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-            />
-          </div>
-          
-          <div>
-            <Label htmlFor="message" className="block text-zinc-300 text-sm font-medium mb-2">
-              Message
-            </Label>
-            <textarea
-              id="message"
-              rows={6}
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder="Tell us more about your inquiry..."
-              className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent resize-none"
+              name="subject"
+              value={formData.subject}
+              onChange={handleChange}
+              className="bg-zinc-800 border-zinc-700 text-white"
               required
             />
           </div>
-          
+
+          <div>
+            <Label htmlFor="message" className="text-zinc-300">Message</Label>
+            <Textarea
+              id="message"
+              name="message"
+              value={formData.message}
+              onChange={handleChange}
+              rows={5}
+              className="bg-zinc-800 border-zinc-700 text-white"
+              required
+            />
+          </div>
+
           <Button 
-            type="submit"
-            className="w-full bg-white text-zinc-950 hover:bg-zinc-100 text-lg py-3"
-            disabled={loading}
+            type="submit" 
+            className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
+            disabled={isLoading}
           >
-            {loading ? 'Sending...' : 'Send Message'}
+            {isLoading ? "Sending..." : "Send Message"}
           </Button>
         </form>
       </CardContent>

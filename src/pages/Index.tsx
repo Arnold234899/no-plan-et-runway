@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { Hero } from "@/components/sections/Hero";
@@ -8,6 +9,7 @@ import { BusinessProfile } from "@/components/sections/BusinessProfile";
 import { Gallery } from "@/components/sections/Gallery";
 import { Influencers } from "@/components/sections/Influencers";
 import { UpdatedInfluencerApplicationForm } from "@/components/forms/UpdatedInfluencerApplicationForm";
+import { Newsletter } from "@/components/sections/Newsletter";
 import { Contact } from "@/components/sections/Contact";
 import { Navigation } from "@/components/layout/Navigation";
 import { Footer } from "@/components/layout/Footer";
@@ -102,6 +104,7 @@ const Index = () => {
         <BrandMission />
         <BusinessProfile />
         <Gallery />
+        <Newsletter />
         <Influencers />
         <div className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-950/50 via-slate-950/80 to-emerald-950/50">
           <UpdatedInfluencerApplicationForm />
