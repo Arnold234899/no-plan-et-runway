@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
@@ -15,40 +15,66 @@ const Auth = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [loading, setLoading] = useState(false);
-  const { signIn, signUp } = useAuth();
+  const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      console.log('User already logged in, redirecting to home');
+      navigate('/');
+    }
+  }, [user, navigate]);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('Attempting sign in with email:', email);
     setLoading(true);
     
-    const { error } = await signIn(email, password);
-    
-    if (error) {
-      toast.error(error.message);
-    } else {
-      toast.success('Welcome back!');
-      navigate('/');
+    try {
+      const { error } = await signIn(email, password);
+      
+      if (error) {
+        console.error('Sign in error:', error);
+        toast.error(error.message || 'Failed to sign in');
+      } else {
+        console.log('Sign in successful');
+        toast.success('Welcome back!');
+        navigate('/');
+      }
+    } catch (err) {
+      console.error('Sign in exception:', err);
+      toast.error('An unexpected error occurred');
+    } finally {
+      setLoading(false);
     }
-    
-    setLoading(false);
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('Attempting sign up with email:', email);
     setLoading(true);
     
-    const { error } = await signUp(email, password, firstName, lastName);
-    
-    if (error) {
-      toast.error(error.message);
-    } else {
-      toast.success('Account created successfully! Please check your email to verify your account.');
-      navigate('/');
+    try {
+      const { error } = await signUp(email, password, firstName, lastName);
+      
+      if (error) {
+        console.error('Sign up error:', error);
+        toast.error(error.message || 'Failed to create account');
+      } else {
+        console.log('Sign up successful');
+        toast.success('Account created successfully! Please check your email to verify your account.');
+        navigate('/');
+      }
+    } catch (err) {
+      console.error('Sign up exception:', err);
+      toast.error('An unexpected error occurred');
+    } finally {
+      setLoading(false);
     }
-    
-    setLoading(false);
   };
+
+  console.log('Auth component rendering, user:', user);
 
   return (
     <div className="min-h-screen bg-zinc-950 flex items-center justify-center p-4">
@@ -88,6 +114,7 @@ const Auth = () => {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className="bg-zinc-800 border-zinc-700 text-white"
+                      placeholder="ferdinandthandoarnold@gmail.com"
                       required
                     />
                   </div>
@@ -99,6 +126,7 @@ const Auth = () => {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       className="bg-zinc-800 border-zinc-700 text-white"
+                      placeholder="123456@#"
                       required
                     />
                   </div>
@@ -152,6 +180,7 @@ const Auth = () => {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className="bg-zinc-800 border-zinc-700 text-white"
+                      placeholder="ferdinandthandoarnold@gmail.com"
                       required
                     />
                   </div>
@@ -163,6 +192,7 @@ const Auth = () => {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       className="bg-zinc-800 border-zinc-700 text-white"
+                      placeholder="123456@#"
                       required
                       minLength={6}
                     />
