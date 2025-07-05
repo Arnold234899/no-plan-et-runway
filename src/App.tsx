@@ -1,75 +1,44 @@
 
-import { Suspense, lazy } from "react";
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { HelmetProvider } from 'react-helmet-async';
+import { HelmetProvider } from "react-helmet-async";
+import { AuthProvider } from "@/hooks/useAuth";
 import Index from "./pages/Index";
-
-const Shop = lazy(() => import("./pages/Shop"));
-const Checkout = lazy(() => import("./pages/Checkout"));
-const Auth = lazy(() => import("./pages/Auth"));
-const Admin = lazy(() => import("./pages/Admin"));
-const NotFound = lazy(() => import("./pages/NotFound"));
+import Shop from "./pages/Shop";
+import Checkout from "./pages/Checkout";
+import Lerai from "./pages/Lerai";
+import BrandAmbassador from "./pages/BrandAmbassador";
+import Auth from "./pages/Auth";
+import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-function App() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <HelmetProvider>
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <HelmetProvider>
+      <AuthProvider>
         <TooltipProvider>
           <Toaster />
+          <Sonner />
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
-              <Route
-                path="/shop"
-                element={
-                  <Suspense fallback={<div>Loading...</div>}>
-                    <Shop />
-                  </Suspense>
-                }
-              />
-              <Route
-                path="/checkout/:productId"
-                element={
-                  <Suspense fallback={<div>Loading...</div>}>
-                    <Checkout />
-                  </Suspense>
-                }
-              />
-              <Route
-                path="/auth"
-                element={
-                  <Suspense fallback={<div>Loading...</div>}>
-                    <Auth />
-                  </Suspense>
-                }
-              />
-              <Route
-                path="/admin"
-                element={
-                  <Suspense fallback={<div>Loading...</div>}>
-                    <Admin />
-                  </Suspense>
-                }
-              />
-              <Route
-                path="*"
-                element={
-                  <Suspense fallback={<div>Loading...</div>}>
-                    <NotFound />
-                  </Suspense>
-                }
-              />
+              <Route path="/shop" element={<Shop />} />
+              <Route path="/checkout/:productId" element={<Checkout />} />
+              <Route path="/lerai" element={<Lerai />} />
+              <Route path="/brand-ambassador" element={<BrandAmbassador />} />
+              <Route path="/auth" element={<Auth />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
         </TooltipProvider>
-      </HelmetProvider>
-    </QueryClientProvider>
-  );
-}
+      </AuthProvider>
+    </HelmetProvider>
+  </QueryClientProvider>
+);
 
 export default App;

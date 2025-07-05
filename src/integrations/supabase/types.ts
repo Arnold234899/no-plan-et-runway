@@ -9,30 +9,6 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      admin_users: {
-        Row: {
-          created_at: string | null
-          email: string
-          id: string
-          is_owner: boolean | null
-          user_id: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          email: string
-          id?: string
-          is_owner?: boolean | null
-          user_id?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          email?: string
-          id?: string
-          is_owner?: boolean | null
-          user_id?: string | null
-        }
-        Relationships: []
-      }
       companies: {
         Row: {
           created_at: string
@@ -726,54 +702,6 @@ export type Database = {
           },
         ]
       }
-      products: {
-        Row: {
-          bestseller: boolean | null
-          category: string
-          created_at: string | null
-          description: string | null
-          id: string
-          image_url: string | null
-          is_active: boolean | null
-          is_new: boolean | null
-          name: string
-          price: number
-          stock_quantity: number | null
-          sustainable: boolean | null
-          updated_at: string | null
-        }
-        Insert: {
-          bestseller?: boolean | null
-          category: string
-          created_at?: string | null
-          description?: string | null
-          id?: string
-          image_url?: string | null
-          is_active?: boolean | null
-          is_new?: boolean | null
-          name: string
-          price: number
-          stock_quantity?: number | null
-          sustainable?: boolean | null
-          updated_at?: string | null
-        }
-        Update: {
-          bestseller?: boolean | null
-          category?: string
-          created_at?: string | null
-          description?: string | null
-          id?: string
-          image_url?: string | null
-          is_active?: boolean | null
-          is_new?: boolean | null
-          name?: string
-          price?: number
-          stock_quantity?: number | null
-          sustainable?: boolean | null
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -1024,14 +952,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      is_admin: {
-        Args: { user_id: string }
-        Returns: boolean
-      }
-      is_owner: {
-        Args: { user_id: string }
-        Returns: boolean
-      }
+      [_ in never]: never
     }
     Enums: {
       [_ in never]: never

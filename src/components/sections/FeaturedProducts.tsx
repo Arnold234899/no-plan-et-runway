@@ -1,61 +1,14 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ShoppingBag } from "lucide-react";
 import { ProductSorting } from "@/components/shop/ProductSorting";
-import { supabase } from "@/integrations/supabase/client";
-import { Link } from "react-router-dom";
-
-type Product = {
-  id: string;
-  name: string;
-  price: number;
-  priceDisplay: string;
-  image: string;
-  category: string;
-  sustainable: boolean;
-  isNew: boolean;
-  bestseller: boolean;
-};
+import { featuredProducts, Product } from "@/data/products";
 
 export const FeaturedProducts = () => {
   const [sortBy, setSortBy] = useState("newest");
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  const fetchProducts = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('products')
-        .select('*')
-        .eq('is_active', true)
-        .limit(8); // Show only 8 featured products
-
-      if (error) throw error;
-
-      const formattedProducts: Product[] = (data || []).map(product => ({
-        id: product.id,
-        name: product.name,
-        price: Number(product.price),
-        priceDisplay: `$${Number(product.price)}`,
-        image: product.image_url || 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=600&fit=crop',
-        category: product.category,
-        sustainable: product.sustainable || false,
-        isNew: product.is_new || false,
-        bestseller: product.bestseller || false,
-      }));
-
-      setProducts(formattedProducts);
-    } catch (error) {
-      console.error('Error fetching products:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const products: Product[] = featuredProducts;
 
   const sortProducts = (products: Product[], sortBy: string): Product[] => {
     const sorted = [...products];
@@ -79,16 +32,6 @@ export const FeaturedProducts = () => {
   };
 
   const sortedProducts = sortProducts(products, sortBy);
-
-  if (loading) {
-    return (
-      <section id="shop" className="py-20 px-4 sm:px-6 lg:px-8 bg-zinc-950">
-        <div className="max-w-7xl mx-auto text-center">
-          <div className="text-white">Loading products...</div>
-        </div>
-      </section>
-    );
-  }
 
   return (
     <section id="shop" className="py-20 px-4 sm:px-6 lg:px-8 bg-zinc-950">
@@ -118,8 +61,10 @@ export const FeaturedProducts = () => {
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                 />
                 
+                {/* Overlay */}
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300"></div>
                 
+                {/* Badges */}
                 <div className="absolute top-4 left-4 space-y-2">
                   {product.sustainable && (
                     <div className="bg-green-600 text-white text-xs px-2 py-1 rounded-full">
@@ -138,16 +83,16 @@ export const FeaturedProducts = () => {
                   )}
                 </div>
                 
+                {/* Quick Shop Button */}
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <Link to={`/checkout/${product.id}`}>
-                    <Button className="bg-white text-zinc-950 hover:bg-zinc-100">
-                      <ShoppingBag className="w-4 h-4 mr-2" />
-                      Quick Shop
-                    </Button>
-                  </Link>
+                  <Button className="bg-white text-zinc-950 hover:bg-zinc-100">
+                    <ShoppingBag className="w-4 h-4 mr-2" />
+                    Quick Shop
+                  </Button>
                 </div>
               </div>
 
+              {/* Product Info */}
               <div className="p-6">
                 <p className="text-zinc-500 text-sm mb-1">{product.category}</p>
                 <h3 className="text-white font-semibold text-lg mb-2">{product.name}</h3>
@@ -158,15 +103,13 @@ export const FeaturedProducts = () => {
         </div>
 
         <div className="text-center mt-12">
-          <Link to="/shop">
-            <Button 
-              variant="outline" 
-              size="lg"
-              className="border-zinc-600 text-white hover:bg-zinc-800 text-lg px-8 py-4"
-            >
-              View All Products
-            </Button>
-          </Link>
+          <Button 
+            variant="outline" 
+            size="lg"
+            className="border-zinc-600 text-white hover:bg-zinc-800 text-lg px-8 py-4"
+          >
+            View All Products
+          </Button>
         </div>
       </div>
     </section>
