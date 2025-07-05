@@ -12,7 +12,6 @@ import { Contact } from "@/components/sections/Contact";
 import { Navigation } from "@/components/layout/Navigation";
 import { Footer } from "@/components/layout/Footer";
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
-import { AuthButton } from "@/components/auth/AuthButton";
 import { featuredProducts } from "@/data/products";
 
 const Index = () => {
@@ -96,7 +95,7 @@ const Index = () => {
         </script>
       </Helmet>
       <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
-        <Navigation theme={theme} toggleTheme={toggleTheme} authButton={<AuthButton />} />
+        <Navigation theme={theme} toggleTheme={toggleTheme} />
         <Hero theme={theme} />
         <Promotions />
         <FeaturedProducts />

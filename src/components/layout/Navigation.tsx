@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Menu, X, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { AuthButton } from "@/components/auth/AuthButton";
 
 interface NavigationProps {
   theme: 'light' | 'dark';
@@ -58,11 +59,13 @@ export const Navigation = ({ theme, toggleTheme }: NavigationProps) => {
               <ShoppingBag className="h-5 w-5 group-hover:text-teal-400 transition-colors duration-300" />
               <span className="ml-2">Cart (0)</span>
             </Button>
+            <AuthButton />
             <ThemeToggle theme={theme} onToggle={toggleTheme} />
           </div>
 
           {/* Mobile menu button */}
           <div className="flex items-center gap-2 md:hidden">
+            <AuthButton />
             <ThemeToggle theme={theme} onToggle={toggleTheme} />
             <Button
               variant="ghost"
