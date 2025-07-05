@@ -7,11 +7,12 @@ import { BrandMission } from "@/components/sections/BrandMission";
 import { BusinessProfile } from "@/components/sections/BusinessProfile";
 import { Gallery } from "@/components/sections/Gallery";
 import { Influencers } from "@/components/sections/Influencers";
-import { InfluencerApplicationForm } from "@/components/forms/InfluencerApplicationForm";
+import { UpdatedInfluencerApplicationForm } from "@/components/forms/UpdatedInfluencerApplicationForm";
 import { Contact } from "@/components/sections/Contact";
 import { Navigation } from "@/components/layout/Navigation";
 import { Footer } from "@/components/layout/Footer";
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
+import { AuthButton } from "@/components/auth/AuthButton";
 import { featuredProducts } from "@/data/products";
 
 const Index = () => {
@@ -93,14 +94,9 @@ const Index = () => {
             ]
           })}
         </script>
-        {productSchemas.map((schema, index) => (
-          <script type="application/ld+json" key={`product-schema-${index}`}>
-            {JSON.stringify(schema)}
-          </script>
-        ))}
       </Helmet>
       <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
-        <Navigation theme={theme} toggleTheme={toggleTheme} />
+        <Navigation theme={theme} toggleTheme={toggleTheme} authButton={<AuthButton />} />
         <Hero theme={theme} />
         <Promotions />
         <FeaturedProducts />
@@ -109,7 +105,7 @@ const Index = () => {
         <Gallery />
         <Influencers />
         <div className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-950/50 via-slate-950/80 to-emerald-950/50">
-          <InfluencerApplicationForm />
+          <UpdatedInfluencerApplicationForm />
         </div>
         <Contact />
         <Footer />

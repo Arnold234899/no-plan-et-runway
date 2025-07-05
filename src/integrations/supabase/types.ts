@@ -66,6 +66,36 @@ export type Database = {
         }
         Relationships: []
       }
+      contact_messages: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          message: string
+          name: string
+          subject: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          message: string
+          name: string
+          subject?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string
+          name?: string
+          subject?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       departments: {
         Row: {
           company_id: string
@@ -222,6 +252,66 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      influencer_applications: {
+        Row: {
+          collaboration_ideas: string | null
+          created_at: string
+          email: string
+          followers_count: number | null
+          id: string
+          instagram_handle: string | null
+          name: string
+          tiktok_handle: string | null
+          user_id: string | null
+          why_interested: string | null
+        }
+        Insert: {
+          collaboration_ideas?: string | null
+          created_at?: string
+          email: string
+          followers_count?: number | null
+          id?: string
+          instagram_handle?: string | null
+          name: string
+          tiktok_handle?: string | null
+          user_id?: string | null
+          why_interested?: string | null
+        }
+        Update: {
+          collaboration_ideas?: string | null
+          created_at?: string
+          email?: string
+          followers_count?: number | null
+          id?: string
+          instagram_handle?: string | null
+          name?: string
+          tiktok_handle?: string | null
+          user_id?: string | null
+          why_interested?: string | null
+        }
+        Relationships: []
+      }
+      newsletter_subscriptions: {
+        Row: {
+          active: boolean
+          email: string
+          id: string
+          subscribed_at: string
+        }
+        Insert: {
+          active?: boolean
+          email: string
+          id?: string
+          subscribed_at?: string
+        }
+        Update: {
+          active?: boolean
+          email?: string
+          id?: string
+          subscribed_at?: string
+        }
+        Relationships: []
       }
       pending_payments: {
         Row: {
@@ -826,6 +916,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      website_users: {
+        Row: {
+          created_at: string
+          email: string
+          first_name: string | null
+          id: string
+          last_name: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
     }
     Views: {

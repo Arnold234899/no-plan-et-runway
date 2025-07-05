@@ -1,7 +1,8 @@
 
 import { Mail, Phone, Instagram, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
+import { ContactForm } from "@/components/forms/ContactForm";
 
 export const Contact = () => {
   return (
@@ -18,64 +19,7 @@ export const Contact = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Contact Form */}
-          <Card className="bg-zinc-900 border-zinc-800">
-            <CardHeader>
-              <CardTitle className="text-white text-2xl">Send us a Message</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div>
-                <label htmlFor="name" className="block text-zinc-300 text-sm font-medium mb-2">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  placeholder="Your name"
-                  className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                />
-              </div>
-              
-              <div>
-                <label htmlFor="email" className="block text-zinc-300 text-sm font-medium mb-2">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  placeholder="your.email@example.com"
-                  className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                />
-              </div>
-              
-              <div>
-                <label htmlFor="subject" className="block text-zinc-300 text-sm font-medium mb-2">
-                  Subject
-                </label>
-                <input
-                  type="text"
-                  id="subject"
-                  placeholder="What's this about?"
-                  className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent"
-                />
-              </div>
-              
-              <div>
-                <label htmlFor="message" className="block text-zinc-300 text-sm font-medium mb-2">
-                  Message
-                </label>
-                <textarea
-                  id="message"
-                  rows={6}
-                  placeholder="Tell us more about your inquiry..."
-                  className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent resize-none"
-                />
-              </div>
-              
-              <Button className="w-full bg-white text-zinc-950 hover:bg-zinc-100 text-lg py-3">
-                Send Message
-              </Button>
-            </CardContent>
-          </Card>
+          <ContactForm />
 
           {/* Contact Information */}
           <div className="space-y-8">
