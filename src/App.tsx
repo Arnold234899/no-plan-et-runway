@@ -12,6 +12,7 @@ import Checkout from "./pages/Checkout";
 import Lerai from "./pages/Lerai";
 import BrandAmbassador from "./pages/BrandAmbassador";
 import Auth from "./pages/Auth";
+import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,6 +32,7 @@ const App = () => (
               <Route path="/lerai" element={<Lerai />} />
               <Route path="/brand-ambassador" element={<BrandAmbassador />} />
               <Route path="/auth" element={<Auth />} />
+              <Route path="/admin" element={<Admin />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
