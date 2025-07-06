@@ -39,24 +39,28 @@ const Shop = () => {
 
   const fetchProducts = async () => {
     try {
-      // Ensure products are seeded
+      // Ensure products are seeded first
       await seedProducts();
       
-      const { data, error } = await supabase
-        .from('products')
-        .select('*')
-        .eq('is_active', true)
-        .order('created_at', { ascending: false });
+      // Add delay to ensure seeding completes
+      setTimeout(async () => {
+        const { data, error } = await supabase
+          .from('products')
+          .select('*')
+          .eq('is_active', true)
+          .order('created_at', { ascending: false });
 
-      if (error) {
-        console.error("Error fetching products:", error);
-        return;
-      }
+        if (error) {
+          console.error("Error fetching products:", error);
+          return;
+        }
 
-      setProducts(data || []);
+        console.log("Shop - Fetched products:", data);
+        setProducts(data || []);
+        setLoading(false);
+      }, 1000);
     } catch (error) {
       console.error("Error in fetchProducts:", error);
-    } finally {
       setLoading(false);
     }
   };
@@ -114,7 +118,7 @@ const Shop = () => {
           {/* Responsive Header */}
           <div className="text-center mb-8 sm:mb-12 section-spacing">
             <Link to="/" className="inline-block mb-4">
-              <h1 className="font-bold bg-gradient-to-r from-emerald-400 via-blue-400 to-teal-400 bg-clip-text text-transparent mb-4 hover:from-emerald-300 hover:to-blue-300 transition-all duration-300">
+              <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold bg-gradient-to-r from-emerald-400 via-blue-400 to-teal-400 bg-clip-text text-transparent mb-4 hover:from-emerald-300 hover:to-blue-300 transition-all duration-300">
                 NO PLAN-ET B Shop
               </h1>
             </Link>
@@ -130,116 +134,134 @@ const Shop = () => {
             </Link>
           </div>
 
-          {/* Responsive Filters */}
-          <div className="flex flex-col sm:flex-row gap-4 mb-6 sm:mb-8 px-4">
-            <Select value={filterCategory} onValueChange={setFilterCategory}>
-              <SelectTrigger className="w-full sm:w-48 bg-zinc-900 border-zinc-700 text-white">
-                <SelectValue placeholder="Filter by category" />
-              </SelectTrigger>
-              <SelectContent className="bg-zinc-900 border-zinc-700">
-                <SelectItem value="all">All Categories</SelectItem>
-                {categories.map(category => (
-                  <SelectItem key={category} value={category}>
-                    {category.charAt(0).toUpperCase() + category.slice(1)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-full sm:w-48 bg-zinc-900 border-zinc-700 text-white">
-                <SelectValue placeholder="Sort by" />
-              </SelectTrigger>
-              <SelectContent className="bg-zinc-900 border-zinc-700">
-                <SelectItem value="name">Name A-Z</SelectItem>
-                <SelectItem value="price-low">Price: Low to High</SelectItem>
-                <SelectItem value="price-high">Price: High to Low</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Responsive Products Grid */}
-          <div className="responsive-grid mb-12 sm:mb-16">
-            {filteredAndSortedProducts.map((product) => (
-              <div
-                key={product.id}
-                className="group relative bg-zinc-900/50 backdrop-blur-sm rounded-xl overflow-hidden border border-emerald-400/20 hover:border-emerald-400/60 transition-all duration-300 hover:transform hover:scale-105"
+          {/* Show refresh button if no products */}
+          {products.length === 0 && !loading && (
+            <div className="text-center py-12 mb-8">
+              <div className="text-zinc-400 text-lg mb-4">No products found. Let's load them for you!</div>
+              <Button 
+                onClick={fetchProducts}
+                className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white"
               >
-                {/* Product Image */}
-                <div className="aspect-[3/4] overflow-hidden">
-                  <img
-                    src={product.image_url}
-                    alt={product.name}
-                    className="responsive-image group-hover:scale-110 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                </div>
+                Load Products
+              </Button>
+            </div>
+          )}
 
-                {/* Product Info */}
-                <div className="card-spacing">
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    {product.sustainable && (
-                      <Badge className="bg-green-600/20 text-green-400 border-green-400/30 text-xs">
-                        Sustainable
-                      </Badge>
-                    )}
-                    {product.is_new && (
-                      <Badge className="bg-blue-600/20 text-blue-400 border-blue-400/30 text-xs">
-                        New
-                      </Badge>
-                    )}
-                    {product.bestseller && (
-                      <Badge className="bg-yellow-600/20 text-yellow-400 border-yellow-400/30 text-xs">
-                        <Star className="w-3 h-3 mr-1" />
-                        Bestseller
-                      </Badge>
-                    )}
-                  </div>
+          {/* Only show filters and products if we have products */}
+          {products.length > 0 && (
+            <>
+              {/* Responsive Filters */}
+              <div className="flex flex-col sm:flex-row gap-4 mb-6 sm:mb-8 px-4">
+                <Select value={filterCategory} onValueChange={setFilterCategory}>
+                  <SelectTrigger className="w-full sm:w-48 bg-zinc-900 border-zinc-700 text-white">
+                    <SelectValue placeholder="Filter by category" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-zinc-900 border-zinc-700">
+                    <SelectItem value="all">All Categories</SelectItem>
+                    {categories.map(category => (
+                      <SelectItem key={category} value={category}>
+                        {category.charAt(0).toUpperCase() + category.slice(1)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
 
-                  <h3 className="text-lg sm:text-xl font-semibold text-white mb-2 group-hover:text-emerald-400 transition-colors line-clamp-2">
-                    {product.name}
-                  </h3>
-                  <p className="text-zinc-400 text-sm mb-3 line-clamp-2">
-                    {product.description}
-                  </p>
-                  <p className="text-xl sm:text-2xl font-bold text-emerald-400 mb-4">
-                    ${product.price}
-                  </p>
-
-                  {/* Responsive Action Buttons */}
-                  <div className="space-y-2">
-                    <Button
-                      onClick={() => handleAddToCart(product)}
-                      className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white btn-responsive"
-                      disabled={product.stock_quantity === 0}
-                    >
-                      <Plus className="w-4 h-4 mr-2" />
-                      Add to Cart
-                    </Button>
-                    <Link to={`/checkout/${product.id}`} className="block">
-                      <Button
-                        variant="outline"
-                        className="w-full border-emerald-400/50 text-emerald-400 hover:bg-emerald-900/30 btn-responsive"
-                        disabled={product.stock_quantity === 0}
-                      >
-                        <ShoppingBag className="w-4 h-4 mr-2" />
-                        Buy Now
-                      </Button>
-                    </Link>
-                  </div>
-
-                  {product.stock_quantity === 0 && (
-                    <p className="text-red-400 text-sm mt-2 font-semibold">Out of Stock</p>
-                  )}
-                </div>
-
-                {/* Wishlist Button */}
-                <button className="absolute top-4 right-4 p-2 bg-black/50 backdrop-blur-sm rounded-full text-white hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100 tap-target">
-                  <Heart className="w-5 h-5" />
-                </button>
+                <Select value={sortBy} onValueChange={setSortBy}>
+                  <SelectTrigger className="w-full sm:w-48 bg-zinc-900 border-zinc-700 text-white">
+                    <SelectValue placeholder="Sort by" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-zinc-900 border-zinc-700">
+                    <SelectItem value="name">Name A-Z</SelectItem>
+                    <SelectItem value="price-low">Price: Low to High</SelectItem>
+                    <SelectItem value="price-high">Price: High to Low</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
-            ))}
-          </div>
+
+              {/* Responsive Products Grid */}
+              <div className="responsive-grid mb-12 sm:mb-16">
+                {filteredAndSortedProducts.map((product) => (
+                  <div
+                    key={product.id}
+                    className="group relative bg-zinc-900/50 backdrop-blur-sm rounded-xl overflow-hidden border border-emerald-400/20 hover:border-emerald-400/60 transition-all duration-300 hover:transform hover:scale-105"
+                  >
+                    {/* Product Image */}
+                    <div className="aspect-[3/4] overflow-hidden">
+                      <img
+                        src={product.image_url}
+                        alt={product.name}
+                        className="responsive-image group-hover:scale-110 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    </div>
+
+                    {/* Product Info */}
+                    <div className="card-spacing">
+                      <div className="flex flex-wrap gap-2 mb-3">
+                        {product.sustainable && (
+                          <Badge className="bg-green-600/20 text-green-400 border-green-400/30 text-xs">
+                            Sustainable
+                          </Badge>
+                        )}
+                        {product.is_new && (
+                          <Badge className="bg-blue-600/20 text-blue-400 border-blue-400/30 text-xs">
+                            New
+                          </Badge>
+                        )}
+                        {product.bestseller && (
+                          <Badge className="bg-yellow-600/20 text-yellow-400 border-yellow-400/30 text-xs">
+                            <Star className="w-3 h-3 mr-1" />
+                            Bestseller
+                          </Badge>
+                        )}
+                      </div>
+
+                      <h3 className="text-lg sm:text-xl font-semibold text-white mb-2 group-hover:text-emerald-400 transition-colors line-clamp-2">
+                        {product.name}
+                      </h3>
+                      <p className="text-zinc-400 text-sm mb-3 line-clamp-2">
+                        {product.description}
+                      </p>
+                      <p className="text-xl sm:text-2xl font-bold text-emerald-400 mb-4">
+                        ${product.price}
+                      </p>
+
+                      {/* Responsive Action Buttons */}
+                      <div className="space-y-2">
+                        <Button
+                          onClick={() => handleAddToCart(product)}
+                          className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white btn-responsive"
+                          disabled={product.stock_quantity === 0}
+                        >
+                          <Plus className="w-4 h-4 mr-2" />
+                          Add to Cart
+                        </Button>
+                        <Link to={`/checkout/${product.id}`} className="block">
+                          <Button
+                            variant="outline"
+                            className="w-full border-emerald-400/50 text-emerald-400 hover:bg-emerald-900/30 btn-responsive"
+                            disabled={product.stock_quantity === 0}
+                          >
+                            <ShoppingBag className="w-4 h-4 mr-2" />
+                            Buy Now
+                          </Button>
+                        </Link>
+                      </div>
+
+                      {product.stock_quantity === 0 && (
+                        <p className="text-red-400 text-sm mt-2 font-semibold">Out of Stock</p>
+                      )}
+                    </div>
+
+                    {/* Wishlist Button */}
+                    <button className="absolute top-4 right-4 p-2 bg-black/50 backdrop-blur-sm rounded-full text-white hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100 tap-target">
+                      <Heart className="w-5 h-5" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
 
           {/* Back to Home Button */}
           <div className="text-center mb-8">

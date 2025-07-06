@@ -24,16 +24,16 @@ export const seedProducts = async () => {
 
     // Insert all sample products
     const productsToInsert = sampleProducts.map((product, index) => ({
-      id: (index + 1).toString(), // Use simple IDs like "1", "2", "3", etc.
+      id: (index + 1).toString(),
       name: product.name,
       description: product.description,
       price: product.price,
       category: product.category,
-      image_url: product.image_url, // Fixed: was 'image'
+      image_url: product.image_url,
       sustainable: product.sustainable,
-      is_new: product.is_new, // Fixed: was 'isNew'
+      is_new: product.is_new,
       bestseller: product.bestseller,
-      stock_quantity: 50, // Set a good stock quantity
+      stock_quantity: 50,
       is_active: true
     }));
 
@@ -53,6 +53,3 @@ export const seedProducts = async () => {
     console.error("Error in seedProducts:", error);
   }
 };
-
-// Auto-seed products when this module is imported
-seedProducts();
