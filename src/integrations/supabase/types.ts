@@ -337,6 +337,109 @@ export type Database = {
         }
         Relationships: []
       }
+      order_items: {
+        Row: {
+          created_at: string
+          id: string
+          order_id: string
+          product_id: string
+          quantity: number
+          total_price: number
+          unit_price: number
+          variant_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          order_id: string
+          product_id: string
+          quantity: number
+          total_price: number
+          unit_price: number
+          variant_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          order_id?: string
+          product_id?: string
+          quantity?: number
+          total_price?: number
+          unit_price?: number
+          variant_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "product_variants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          billing_address: Json | null
+          created_at: string
+          currency: string
+          email: string
+          id: string
+          notes: string | null
+          payment_id: string | null
+          payment_method: string | null
+          shipping_address: Json | null
+          status: string
+          total_amount: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          billing_address?: Json | null
+          created_at?: string
+          currency?: string
+          email: string
+          id?: string
+          notes?: string | null
+          payment_id?: string | null
+          payment_method?: string | null
+          shipping_address?: Json | null
+          status?: string
+          total_amount: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          billing_address?: Json | null
+          created_at?: string
+          currency?: string
+          email?: string
+          id?: string
+          notes?: string | null
+          payment_id?: string | null
+          payment_method?: string | null
+          shipping_address?: Json | null
+          status?: string
+          total_amount?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       pending_payments: {
         Row: {
           created_at: string
@@ -773,6 +876,50 @@ export type Database = {
           },
         ]
       }
+      product_variants: {
+        Row: {
+          color: string | null
+          created_at: string
+          id: string
+          is_active: boolean
+          price_adjustment: number | null
+          product_id: string
+          size: string | null
+          stock_quantity: number
+          updated_at: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          price_adjustment?: number | null
+          product_id: string
+          size?: string | null
+          stock_quantity?: number
+          updated_at?: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          price_adjustment?: number | null
+          product_id?: string
+          size?: string | null
+          stock_quantity?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_variants_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       products: {
         Row: {
           bestseller: boolean | null
@@ -890,6 +1037,60 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      shipping_addresses: {
+        Row: {
+          address_line_1: string
+          address_line_2: string | null
+          city: string
+          company: string | null
+          country: string
+          created_at: string
+          first_name: string
+          id: string
+          is_default: boolean
+          last_name: string
+          phone: string | null
+          postal_code: string
+          state: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address_line_1: string
+          address_line_2?: string | null
+          city: string
+          company?: string | null
+          country?: string
+          created_at?: string
+          first_name: string
+          id?: string
+          is_default?: boolean
+          last_name: string
+          phone?: string | null
+          postal_code: string
+          state: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          address_line_1?: string
+          address_line_2?: string | null
+          city?: string
+          company?: string | null
+          country?: string
+          created_at?: string
+          first_name?: string
+          id?: string
+          is_default?: boolean
+          last_name?: string
+          phone?: string | null
+          postal_code?: string
+          state?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       support_messages: {
         Row: {

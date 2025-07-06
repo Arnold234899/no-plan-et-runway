@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -33,7 +32,7 @@ export const ProductReviews = ({ productId }: ProductReviewsProps) => {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [showReviewForm, setShowReviewForm] = useState(false);
-  const [userReview, setUserReview] = useState<Review | null>(null);
+  const [userReview, setUserReview] = useState<any>(null);
   
   const [newReview, setNewReview] = useState({
     rating: 5,
@@ -65,7 +64,12 @@ export const ProductReviews = ({ productId }: ProductReviewsProps) => {
         return;
       }
 
-      setReviews(data || []);
+      // Filter out any reviews that don't have proper website_users data
+      const validReviews = (data || []).filter(review => 
+        review.website_users && typeof review.website_users === 'object'
+      ) as Review[];
+
+      setReviews(validReviews);
     } catch (error) {
       console.error('Error fetching reviews:', error);
     } finally {
@@ -117,7 +121,7 @@ export const ProductReviews = ({ productId }: ProductReviewsProps) => {
           rating: newReview.rating,
           title: newReview.title.trim() || null,
           comment: newReview.comment.trim(),
-          is_verified_purchase: false, // This would be true if they actually bought it
+          is_verified_purchase: false,
           is_approved: true
         }]);
 

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -16,23 +15,13 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import type { Database } from "@/integrations/supabase/types";
 
-type Product = {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-  category: string;
-};
+type Product = Database['public']['Tables']['products']['Row'];
+type ProductVariant = Database['public']['Tables']['product_variants']['Row'];
+type ShippingAddress = Database['public']['Tables']['shipping_addresses']['Row'];
 
-type CartItem = {
-  product: Product;
-  quantity: number;
-  selectedSize?: string;
-  selectedColor?: string;
-};
-
-type ShippingAddress = {
+type ShippingAddressForm = {
   first_name: string;
   last_name: string;
   company?: string;
@@ -50,14 +39,14 @@ const CompleteCheckout = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [product, setProduct] = useState<Product | null>(null);
-  const [variants, setVariants] = useState<any[]>([]);
-  const [selectedVariant, setSelectedVariant] = useState<any>(null);
+  const [variants, setVariants] = useState<ProductVariant[]>([]);
+  const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark'>('dark');
 
-  const [shippingAddress, setShippingAddress] = useState<ShippingAddress>({
+  const [shippingAddress, setShippingAddress] = useState<ShippingAddressForm>({
     first_name: '',
     last_name: '',
     company: '',
@@ -71,7 +60,7 @@ const CompleteCheckout = () => {
   });
 
   const [notes, setNotes] = useState('');
-  const [savedAddresses, setSavedAddresses] = useState<any[]>([]);
+  const [savedAddresses, setSavedAddresses] = useState<ShippingAddress[]>([]);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
@@ -113,15 +102,7 @@ const CompleteCheckout = () => {
         return;
       }
 
-      const formattedProduct: Product = {
-        id: productData.id,
-        name: productData.name,
-        price: productData.price,
-        image: productData.image_url || `https://images.unsplash.com/photo-${Date.now()}?w=400&h=600&fit=crop`,
-        category: productData.category
-      };
-
-      setProduct(formattedProduct);
+      setProduct(productData);
 
       // Fetch variants
       const { data: variantsData, error: variantsError } = await supabase
@@ -201,8 +182,8 @@ const CompleteCheckout = () => {
 
       const orderData = {
         user_id: user.id,
-        email: user.email,
-        status: 'pending',
+        email: user.email!,
+        status: 'pending' as const,
         total_amount: calculateTotal(),
         currency: 'USD',
         payment_method: paymentMethod,
@@ -302,7 +283,7 @@ const CompleteCheckout = () => {
                 <CardContent>
                   <div className="flex gap-4 mb-6">
                     <img
-                      src={product.image}
+                      src={product.image_url || `https://images.unsplash.com/photo-${Date.now()}?w=400&h=600&fit=crop`}
                       alt={product.name}
                       className="w-20 h-20 object-cover rounded"
                     />
@@ -321,7 +302,7 @@ const CompleteCheckout = () => {
                           value={selectedVariant?.id || ""} 
                           onValueChange={(value) => {
                             const variant = variants.find(v => v.id === value);
-                            setSelectedVariant(variant);
+                            setSelectedVariant(variant || null);
                           }}
                         >
                           <SelectTrigger className="bg-zinc-800 border-zinc-700 text-white">
