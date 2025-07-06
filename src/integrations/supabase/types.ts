@@ -9,6 +9,51 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      abandoned_carts: {
+        Row: {
+          cart_data: Json
+          created_at: string
+          email: string | null
+          id: string
+          recovered: boolean | null
+          recovered_at: string | null
+          recovery_email_sent: boolean | null
+          recovery_email_sent_at: string | null
+          session_id: string
+          total_value: number
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          cart_data: Json
+          created_at?: string
+          email?: string | null
+          id?: string
+          recovered?: boolean | null
+          recovered_at?: string | null
+          recovery_email_sent?: boolean | null
+          recovery_email_sent_at?: string | null
+          session_id: string
+          total_value: number
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          cart_data?: Json
+          created_at?: string
+          email?: string | null
+          id?: string
+          recovered?: boolean | null
+          recovered_at?: string | null
+          recovery_email_sent?: boolean | null
+          recovery_email_sent_at?: string | null
+          session_id?: string
+          total_value?: number
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       admin_users: {
         Row: {
           created_at: string | null
@@ -29,6 +74,54 @@ export type Database = {
           email?: string
           id?: string
           is_owner?: boolean | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      analytics_events: {
+        Row: {
+          city: string | null
+          country: string | null
+          created_at: string
+          event_name: string
+          event_type: string
+          id: string
+          ip_address: unknown | null
+          page_url: string | null
+          properties: Json | null
+          referrer: string | null
+          session_id: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          event_name: string
+          event_type: string
+          id?: string
+          ip_address?: unknown | null
+          page_url?: string | null
+          properties?: Json | null
+          referrer?: string | null
+          session_id?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          event_name?: string
+          event_type?: string
+          id?: string
+          ip_address?: unknown | null
+          page_url?: string | null
+          properties?: Json | null
+          referrer?: string | null
+          session_id?: string | null
+          user_agent?: string | null
           user_id?: string | null
         }
         Relationships: []
@@ -120,6 +213,54 @@ export type Database = {
         }
         Relationships: []
       }
+      customer_profiles: {
+        Row: {
+          average_order_value: number | null
+          created_at: string
+          customer_lifetime_value: number | null
+          date_of_birth: string | null
+          gender: string | null
+          id: string
+          last_order_date: string | null
+          phone: string | null
+          preferred_categories: string[] | null
+          total_orders: number | null
+          total_spent: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          average_order_value?: number | null
+          created_at?: string
+          customer_lifetime_value?: number | null
+          date_of_birth?: string | null
+          gender?: string | null
+          id?: string
+          last_order_date?: string | null
+          phone?: string | null
+          preferred_categories?: string[] | null
+          total_orders?: number | null
+          total_spent?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          average_order_value?: number | null
+          created_at?: string
+          customer_lifetime_value?: number | null
+          date_of_birth?: string | null
+          gender?: string | null
+          id?: string
+          last_order_date?: string | null
+          phone?: string | null
+          preferred_categories?: string[] | null
+          total_orders?: number | null
+          total_spent?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       departments: {
         Row: {
           company_id: string
@@ -145,6 +286,98 @@ export type Database = {
             columns: ["company_id"]
             isOneToOne: false
             referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      email_campaigns: {
+        Row: {
+          clicked_count: number | null
+          content: string
+          created_at: string
+          created_by: string | null
+          id: string
+          name: string
+          opened_count: number | null
+          recipient_count: number | null
+          scheduled_at: string | null
+          sent_at: string | null
+          status: string
+          subject: string
+          template_type: string | null
+          updated_at: string
+        }
+        Insert: {
+          clicked_count?: number | null
+          content: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name: string
+          opened_count?: number | null
+          recipient_count?: number | null
+          scheduled_at?: string | null
+          sent_at?: string | null
+          status?: string
+          subject: string
+          template_type?: string | null
+          updated_at?: string
+        }
+        Update: {
+          clicked_count?: number | null
+          content?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name?: string
+          opened_count?: number | null
+          recipient_count?: number | null
+          scheduled_at?: string | null
+          sent_at?: string | null
+          status?: string
+          subject?: string
+          template_type?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      email_tracking: {
+        Row: {
+          campaign_id: string | null
+          clicked_at: string | null
+          created_at: string
+          email: string
+          id: string
+          opened_at: string | null
+          status: string
+          user_id: string | null
+        }
+        Insert: {
+          campaign_id?: string | null
+          clicked_at?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          opened_at?: string | null
+          status?: string
+          user_id?: string | null
+        }
+        Update: {
+          campaign_id?: string | null
+          clicked_at?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          opened_at?: string | null
+          status?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_tracking_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "email_campaigns"
             referencedColumns: ["id"]
           },
         ]
@@ -315,6 +548,60 @@ export type Database = {
           why_interested?: string | null
         }
         Relationships: []
+      }
+      inventory_alerts: {
+        Row: {
+          alert_type: string
+          created_at: string
+          current_quantity: number
+          id: string
+          is_active: boolean
+          last_triggered: string | null
+          product_id: string | null
+          threshold_quantity: number
+          updated_at: string
+          variant_id: string | null
+        }
+        Insert: {
+          alert_type: string
+          created_at?: string
+          current_quantity?: number
+          id?: string
+          is_active?: boolean
+          last_triggered?: string | null
+          product_id?: string | null
+          threshold_quantity?: number
+          updated_at?: string
+          variant_id?: string | null
+        }
+        Update: {
+          alert_type?: string
+          created_at?: string
+          current_quantity?: number
+          id?: string
+          is_active?: boolean
+          last_triggered?: string | null
+          product_id?: string | null
+          threshold_quantity?: number
+          updated_at?: string
+          variant_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inventory_alerts_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inventory_alerts_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "product_variants"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       newsletter_subscriptions: {
         Row: {
@@ -1037,6 +1324,51 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      sales_analytics: {
+        Row: {
+          average_order_value: number | null
+          created_at: string
+          date: string
+          id: string
+          new_customers: number | null
+          period_type: string
+          returning_customers: number | null
+          top_categories: Json | null
+          top_products: Json | null
+          total_orders: number | null
+          total_revenue: number | null
+          updated_at: string
+        }
+        Insert: {
+          average_order_value?: number | null
+          created_at?: string
+          date: string
+          id?: string
+          new_customers?: number | null
+          period_type: string
+          returning_customers?: number | null
+          top_categories?: Json | null
+          top_products?: Json | null
+          total_orders?: number | null
+          total_revenue?: number | null
+          updated_at?: string
+        }
+        Update: {
+          average_order_value?: number | null
+          created_at?: string
+          date?: string
+          id?: string
+          new_customers?: number | null
+          period_type?: string
+          returning_customers?: number | null
+          top_categories?: Json | null
+          top_products?: Json | null
+          total_orders?: number | null
+          total_revenue?: number | null
+          updated_at?: string
+        }
+        Relationships: []
       }
       shipping_addresses: {
         Row: {

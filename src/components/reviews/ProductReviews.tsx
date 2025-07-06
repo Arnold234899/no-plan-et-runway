@@ -65,12 +65,17 @@ export const ProductReviews = ({ productId }: ProductReviewsProps) => {
       }
 
       // Filter and type check the reviews properly
-      const validReviews = (data || []).filter(review => 
-        review && typeof review === 'object' && 
-        review.website_users && 
-        typeof review.website_users === 'object' &&
-        !('error' in review.website_users)
-      ) as Review[];
+      const validReviews = (data || []).filter(review => {
+        return review && 
+               typeof review === 'object' && 
+               review.website_users && 
+               typeof review.website_users === 'object' &&
+               !('error' in review.website_users) &&
+               review.website_users !== null;
+      }).map(review => ({
+        ...review,
+        website_users: review.website_users as { first_name: string | null; last_name: string | null; }
+      })) as Review[];
 
       setReviews(validReviews);
     } catch (error) {
