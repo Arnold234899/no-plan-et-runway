@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
@@ -8,11 +7,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { ArrowLeft, CreditCard, Truck, Shield, Leaf } from 'lucide-react';
+import { ArrowLeft, CreditCard, Truck, Shield, Leaf, User, UserPlus } from 'lucide-react';
 import { Navigation } from '@/components/layout/Navigation';
 import { Footer } from '@/components/layout/Footer';
+import { GuestCheckoutForm, GuestCheckoutData } from '@/components/checkout/GuestCheckoutForm';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { Link } from 'react-router-dom';
@@ -38,6 +37,7 @@ const CartCheckout = () => {
   const { state: cartState, clearCart } = useCart();
   const { theme, toggleTheme } = useTheme();
   const [creating, setCreating] = useState(false);
+  const [checkoutType, setCheckoutType] = useState<'guest' | 'user'>('guest');
 
   const [shippingAddress, setShippingAddress] = useState<ShippingAddressForm>({
     first_name: '',
@@ -58,9 +58,14 @@ const CartCheckout = () => {
     if (cartState.items.length === 0) {
       navigate('/cart');
     }
-  }, [cartState.items.length, navigate]);
+    
+    // If user is logged in, default to user checkout
+    if (user) {
+      setCheckoutType('user');
+    }
+  }, [cartState.items.length, navigate, user]);
 
-  const createOrder = async (paymentId: string, paymentMethod: string) => {
+  const createOrderForUser = async (paymentId: string, paymentMethod: string) => {
     if (!user) {
       toast.error('Please sign in to complete your order');
       return null;
@@ -126,8 +131,102 @@ const CartCheckout = () => {
     }
   };
 
+  const createOrderForGuest = async (paymentId: string, paymentMethod: string, guestData: GuestCheckoutData) => {
+    try {
+      setCreating(true);
+
+      const orderData = {
+        user_id: null, // Guest order
+        email: guestData.email,
+        status: 'pending' as const,
+        total_amount: cartState.total,
+        currency: 'USD',
+        payment_method: paymentMethod,
+        payment_id: paymentId,
+        shipping_address: {
+          first_name: guestData.firstName,
+          last_name: guestData.lastName,
+          address_line_1: guestData.shippingAddress.addressLine1,
+          address_line_2: guestData.shippingAddress.addressLine2 || '',
+          city: guestData.shippingAddress.city,
+          state: guestData.shippingAddress.state,
+          postal_code: guestData.shippingAddress.postalCode,
+          country: guestData.shippingAddress.country,
+          phone: guestData.phone || ''
+        },
+        billing_address: {
+          first_name: guestData.firstName,
+          last_name: guestData.lastName,
+          address_line_1: guestData.shippingAddress.addressLine1,
+          address_line_2: guestData.shippingAddress.addressLine2 || '',
+          city: guestData.shippingAddress.city,
+          state: guestData.shippingAddress.state,
+          postal_code: guestData.shippingAddress.postalCode,
+          country: guestData.shippingAddress.country,
+          phone: guestData.phone || ''
+        },
+        notes: guestData.notes || null
+      };
+
+      const { data: order, error: orderError } = await supabase
+        .from('orders')
+        .insert([orderData])
+        .select()
+        .single();
+
+      if (orderError) {
+        console.error('Error creating order:', orderError);
+        toast.error('Failed to create order');
+        return null;
+      }
+
+      // Create order items
+      const orderItems = cartState.items.map(item => ({
+        order_id: order.id,
+        product_id: item.id,
+        variant_id: item.variantId || null,
+        quantity: item.quantity,
+        unit_price: item.price,
+        total_price: item.price * item.quantity
+      }));
+
+      const { error: itemsError } = await supabase
+        .from('order_items')
+        .insert(orderItems);
+
+      if (itemsError) {
+        console.error('Error creating order items:', itemsError);
+        toast.error('Failed to create order items');
+        return null;
+      }
+
+      toast.success('Order created successfully!');
+      clearCart();
+      return order;
+    } catch (error) {
+      console.error('Error creating order:', error);
+      toast.error('Failed to create order');
+      return null;
+    } finally {
+      setCreating(false);
+    }
+  };
+
+  const [currentGuestData, setCurrentGuestData] = useState<GuestCheckoutData | null>(null);
+
+  const handleGuestCheckout = (guestData: GuestCheckoutData) => {
+    setCurrentGuestData(guestData);
+    // Process payment immediately for guest
+  };
+
   const handlePayPalSuccess = async (details: any) => {
-    const order = await createOrder(details.id, 'paypal');
+    let order;
+    if (checkoutType === 'guest' && currentGuestData) {
+      order = await createOrderForGuest(details.id, 'paypal', currentGuestData);
+    } else if (checkoutType === 'user') {
+      order = await createOrderForUser(details.id, 'paypal');
+    }
+    
     if (order) {
       navigate(`/order-confirmation/${order.id}`);
     }
@@ -214,118 +313,28 @@ const CartCheckout = () => {
               </Card>
             </div>
 
-            {/* Checkout Form */}
+            {/* Checkout Options */}
             <div>
-              <Card className="bg-zinc-900 border-emerald-400/20">
-                <CardHeader>
-                  <CardTitle className="text-white flex items-center">
-                    <Truck className="mr-2 h-5 w-5 text-emerald-400" />
-                    Shipping Information
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                      <Label className="text-zinc-300">First Name</Label>
-                      <Input
-                        value={shippingAddress.first_name}
-                        onChange={(e) => setShippingAddress({...shippingAddress, first_name: e.target.value})}
-                        className="bg-zinc-800 border-zinc-700 text-white focus:border-emerald-400"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-zinc-300">Last Name</Label>
-                      <Input
-                        value={shippingAddress.last_name}
-                        onChange={(e) => setShippingAddress({...shippingAddress, last_name: e.target.value})}
-                        className="bg-zinc-800 border-zinc-700 text-white focus:border-emerald-400"
-                        required
-                      />
-                    </div>
-                  </div>
+              <Tabs value={checkoutType} onValueChange={(value) => setCheckoutType(value as 'guest' | 'user')}>
+                <TabsList className="grid w-full grid-cols-2 bg-zinc-800 mb-6">
+                  <TabsTrigger value="guest" className="text-white data-[state=active]:bg-zinc-700">
+                    <User className="mr-2 h-4 w-4" />
+                    Guest Checkout
+                  </TabsTrigger>
+                  <TabsTrigger value="user" className="text-white data-[state=active]:bg-zinc-700">
+                    <UserPlus className="mr-2 h-4 w-4" />
+                    {user ? 'Account Checkout' : 'Sign In & Checkout'}
+                  </TabsTrigger>
+                </TabsList>
 
-                  <div className="mb-4">
-                    <Label className="text-zinc-300">Address Line 1</Label>
-                    <Input
-                      value={shippingAddress.address_line_1}
-                      onChange={(e) => setShippingAddress({...shippingAddress, address_line_1: e.target.value})}
-                      className="bg-zinc-800 border-zinc-700 text-white focus:border-emerald-400"
-                      required
-                    />
-                  </div>
-
-                  <div className="mb-4">
-                    <Label className="text-zinc-300">Address Line 2 (Optional)</Label>
-                    <Input
-                      value={shippingAddress.address_line_2}
-                      onChange={(e) => setShippingAddress({...shippingAddress, address_line_2: e.target.value})}
-                      className="bg-zinc-800 border-zinc-700 text-white focus:border-emerald-400"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                      <Label className="text-zinc-300">City</Label>
-                      <Input
-                        value={shippingAddress.city}
-                        onChange={(e) => setShippingAddress({...shippingAddress, city: e.target.value})}
-                        className="bg-zinc-800 border-zinc-700 text-white focus:border-emerald-400"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-zinc-300">State</Label>
-                      <Input
-                        value={shippingAddress.state}
-                        onChange={(e) => setShippingAddress({...shippingAddress, state: e.target.value})}
-                        className="bg-zinc-800 border-zinc-700 text-white focus:border-emerald-400"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                      <Label className="text-zinc-300">Postal Code</Label>
-                      <Input
-                        value={shippingAddress.postal_code}
-                        onChange={(e) => setShippingAddress({...shippingAddress, postal_code: e.target.value})}
-                        className="bg-zinc-800 border-zinc-700 text-white focus:border-emerald-400"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-zinc-300">Phone</Label>
-                      <Input
-                        value={shippingAddress.phone}
-                        onChange={(e) => setShippingAddress({...shippingAddress, phone: e.target.value})}
-                        className="bg-zinc-800 border-zinc-700 text-white focus:border-emerald-400"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="mb-6">
-                    <Label className="text-zinc-300">Order Notes (Optional)</Label>
-                    <Textarea
-                      value={notes}
-                      onChange={(e) => setNotes(e.target.value)}
-                      className="bg-zinc-800 border-zinc-700 text-white focus:border-emerald-400"
-                      placeholder="Any special instructions for your sustainable order..."
-                    />
-                  </div>
-
-                  {!user ? (
-                    <div className="text-center">
-                      <p className="text-zinc-300 mb-4">Please sign in to complete your order</p>
-                      <Link to="/auth">
-                        <Button className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white">
-                          Sign In
-                        </Button>
-                      </Link>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
+                <TabsContent value="guest">
+                  <GuestCheckoutForm 
+                    onSubmit={handleGuestCheckout}
+                    loading={creating}
+                  />
+                  
+                  {currentGuestData && (
+                    <div className="mt-6">
                       <PayPalScriptProvider options={{ 
                         clientId: "test", 
                         currency: "USD" 
@@ -359,8 +368,161 @@ const CartCheckout = () => {
                       </PayPalScriptProvider>
                     </div>
                   )}
-                </CardContent>
-              </Card>
+                </TabsContent>
+
+                <TabsContent value="user">
+                  {!user ? (
+                    <Card className="bg-zinc-900 border-emerald-400/20">
+                      <CardContent className="p-6">
+                        <div className="text-center">
+                          <h3 className="text-xl font-semibold text-white mb-4">Sign In to Continue</h3>
+                          <p className="text-zinc-300 mb-6">Sign in to your account for a faster checkout experience</p>
+                          <Link to="/auth">
+                            <Button className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white">
+                              Sign In / Sign Up
+                            </Button>
+                          </Link>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ) : (
+                    <Card className="bg-zinc-900 border-emerald-400/20">
+                      <CardHeader>
+                        <CardTitle className="text-white flex items-center">
+                          <Truck className="mr-2 h-5 w-5 text-emerald-400" />
+                          Shipping Information
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="grid grid-cols-2 gap-4 mb-4">
+                          <div>
+                            <Label className="text-zinc-300">First Name</Label>
+                            <Input
+                              value={shippingAddress.first_name}
+                              onChange={(e) => setShippingAddress({...shippingAddress, first_name: e.target.value})}
+                              className="bg-zinc-800 border-zinc-700 text-white focus:border-emerald-400"
+                              required
+                            />
+                          </div>
+                          <div>
+                            <Label className="text-zinc-300">Last Name</Label>
+                            <Input
+                              value={shippingAddress.last_name}
+                              onChange={(e) => setShippingAddress({...shippingAddress, last_name: e.target.value})}
+                              className="bg-zinc-800 border-zinc-700 text-white focus:border-emerald-400"
+                              required
+                            />
+                          </div>
+                        </div>
+
+                        <div className="mb-4">
+                          <Label className="text-zinc-300">Address Line 1</Label>
+                          <Input
+                            value={shippingAddress.address_line_1}
+                            onChange={(e) => setShippingAddress({...shippingAddress, address_line_1: e.target.value})}
+                            className="bg-zinc-800 border-zinc-700 text-white focus:border-emerald-400"
+                            required
+                          />
+                        </div>
+
+                        <div className="mb-4">
+                          <Label className="text-zinc-300">Address Line 2 (Optional)</Label>
+                          <Input
+                            value={shippingAddress.address_line_2}
+                            onChange={(e) => setShippingAddress({...shippingAddress, address_line_2: e.target.value})}
+                            className="bg-zinc-800 border-zinc-700 text-white focus:border-emerald-400"
+                          />
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4 mb-4">
+                          <div>
+                            <Label className="text-zinc-300">City</Label>
+                            <Input
+                              value={shippingAddress.city}
+                              onChange={(e) => setShippingAddress({...shippingAddress, city: e.target.value})}
+                              className="bg-zinc-800 border-zinc-700 text-white focus:border-emerald-400"
+                              required
+                            />
+                          </div>
+                          <div>
+                            <Label className="text-zinc-300">State</Label>
+                            <Input
+                              value={shippingAddress.state}
+                              onChange={(e) => setShippingAddress({...shippingAddress, state: e.target.value})}
+                              className="bg-zinc-800 border-zinc-700 text-white focus:border-emerald-400"
+                              required
+                            />
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4 mb-4">
+                          <div>
+                            <Label className="text-zinc-300">Postal Code</Label>
+                            <Input
+                              value={shippingAddress.postal_code}
+                              onChange={(e) => setShippingAddress({...shippingAddress, postal_code: e.target.value})}
+                              className="bg-zinc-800 border-zinc-700 text-white focus:border-emerald-400"
+                              required
+                            />
+                          </div>
+                          <div>
+                            <Label className="text-zinc-300">Phone</Label>
+                            <Input
+                              value={shippingAddress.phone}
+                              onChange={(e) => setShippingAddress({...shippingAddress, phone: e.target.value})}
+                              className="bg-zinc-800 border-zinc-700 text-white focus:border-emerald-400"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="mb-6">
+                          <Label className="text-zinc-300">Order Notes (Optional)</Label>
+                          <Textarea
+                            value={notes}
+                            onChange={(e) => setNotes(e.target.value)}
+                            className="bg-zinc-800 border-zinc-700 text-white focus:border-emerald-400"
+                            placeholder="Any special instructions for your sustainable order..."
+                          />
+                        </div>
+
+                        <div className="space-y-4">
+                          <PayPalScriptProvider options={{ 
+                            clientId: "test", 
+                            currency: "USD" 
+                          }}>
+                            <PayPalButtons
+                              style={{ layout: "vertical" }}
+                              createOrder={(data, actions) => {
+                                return actions.order.create({
+                                  intent: "CAPTURE",
+                                  purchase_units: [{
+                                    amount: {
+                                      value: cartState.total.toFixed(2),
+                                      currency_code: "USD"
+                                    },
+                                    description: `NO PLAN-ET B Order - ${cartState.items.length} items`
+                                  }]
+                                });
+                              }}
+                              onApprove={async (data, actions) => {
+                                const details = await actions.order?.capture();
+                                if (details) {
+                                  await handlePayPalSuccess(details);
+                                }
+                              }}
+                              onError={(err) => {
+                                console.error('PayPal Error:', err);
+                                toast.error('Payment failed. Please try again.');
+                              }}
+                              disabled={creating}
+                            />
+                          </PayPalScriptProvider>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )}
+                </TabsContent>
+              </Tabs>
             </div>
           </div>
         </div>
