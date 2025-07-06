@@ -499,11 +499,15 @@ const CompleteCheckout = () => {
                     </div>
                   ) : (
                     <div className="space-y-4">
-                      <PayPalScriptProvider options={{ "client-id": "test", currency: "USD" }}>
+                      <PayPalScriptProvider options={{ 
+                        clientId: "test", 
+                        currency: "USD" 
+                      }}>
                         <PayPalButtons
                           style={{ layout: "vertical" }}
                           createOrder={(data, actions) => {
                             return actions.order.create({
+                              intent: "CAPTURE",
                               purchase_units: [{
                                 amount: {
                                   value: calculateTotal().toFixed(2),

@@ -64,9 +64,12 @@ export const ProductReviews = ({ productId }: ProductReviewsProps) => {
         return;
       }
 
-      // Filter out any reviews that don't have proper website_users data
+      // Filter and type check the reviews properly
       const validReviews = (data || []).filter(review => 
-        review.website_users && typeof review.website_users === 'object'
+        review && typeof review === 'object' && 
+        review.website_users && 
+        typeof review.website_users === 'object' &&
+        !('error' in review.website_users)
       ) as Review[];
 
       setReviews(validReviews);
