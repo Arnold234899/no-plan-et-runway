@@ -37,7 +37,7 @@ export const useReviews = (productId: string) => {
         .from('product_reviews')
         .select(`
           *,
-          website_users (first_name, last_name)
+          website_users!inner (first_name, last_name)
         `)
         .eq('product_id', productId)
         .eq('is_approved', true)
@@ -48,15 +48,21 @@ export const useReviews = (productId: string) => {
         return;
       }
 
-      const validReviews = (data || []).filter(review => {
-        return review && 
-               typeof review === 'object' && 
-               review.website_users && 
-               typeof review.website_users === 'object' &&
-               review.website_users !== null;
-      }) as Review[];
+      // Transform the data to match our Review interface
+      const transformedReviews = (data || []).map((review) => ({
+        id: review.id,
+        rating: review.rating,
+        title: review.title,
+        comment: review.comment,
+        is_verified_purchase: review.is_verified_purchase,
+        created_at: review.created_at,
+        website_users: {
+          first_name: review.website_users?.first_name || null,
+          last_name: review.website_users?.last_name || null,
+        },
+      })) as Review[];
 
-      setReviews(validReviews);
+      setReviews(transformedReviews);
     } catch (error) {
       console.error('Error fetching reviews:', error);
     } finally {
