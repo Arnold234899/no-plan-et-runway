@@ -18,14 +18,14 @@ const Cart = () => {
       <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
         <Navigation theme={theme} toggleTheme={toggleTheme} />
         
-        <div className="pt-20 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto py-16">
-            <div className="text-center">
-              <ShoppingBag className="h-24 w-24 text-zinc-600 mx-auto mb-6" />
-              <h1 className="text-4xl font-bold text-white mb-4">Your Cart is Empty</h1>
-              <p className="text-xl text-zinc-400 mb-8">Ready to make a sustainable choice?</p>
+        <div className="pt-16 sm:pt-20 container-responsive">
+          <div className="max-w-4xl mx-auto section-spacing">
+            <div className="text-center px-4">
+              <ShoppingBag className="h-16 sm:h-20 md:h-24 w-16 sm:w-20 md:w-24 text-zinc-600 mx-auto mb-6" />
+              <h1 className="font-bold text-white mb-4">Your Cart is Empty</h1>
+              <p className="text-lg sm:text-xl text-zinc-400 mb-8">Ready to make a sustainable choice?</p>
               <Link to="/shop">
-                <Button className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white text-lg px-8 py-4">
+                <Button className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white btn-responsive">
                   Shop Collection
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
@@ -43,53 +43,56 @@ const Cart = () => {
     <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
       <Navigation theme={theme} toggleTheme={toggleTheme} />
       
-      <div className="pt-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto py-8">
-          {/* Branded Header */}
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-emerald-400 via-blue-400 to-teal-400 bg-clip-text text-transparent mb-4">
+      <div className="pt-16 sm:pt-20 container-responsive">
+        <div className="max-w-6xl mx-auto py-6 sm:py-8">
+          {/* Responsive Branded Header */}
+          <div className="text-center mb-8 sm:mb-12 px-4">
+            <h1 className="font-bold bg-gradient-to-r from-emerald-400 via-blue-400 to-teal-400 bg-clip-text text-transparent mb-4">
               NO PLAN-ET B Cart
             </h1>
-            <p className="text-xl text-zinc-400">Every purchase makes a difference for our planet</p>
+            <p className="text-lg sm:text-xl text-zinc-400">Every purchase makes a difference for our planet</p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Cart Items */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+            {/* Cart Items - Responsive */}
             <div className="lg:col-span-2 space-y-4">
               {state.items.map((item) => (
                 <Card key={item.id} className="bg-zinc-900 border-emerald-400/20">
-                  <CardContent className="p-6">
-                    <div className="flex gap-6">
+                  <CardContent className="card-spacing">
+                    <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
                       <img
                         src={item.image}
                         alt={item.name}
-                        className="w-24 h-24 object-cover rounded-lg"
+                        className="w-full sm:w-24 h-48 sm:h-24 object-cover rounded-lg"
                       />
-                      <div className="flex-1">
-                        <h3 className="text-xl font-semibold text-white mb-1">{item.name}</h3>
-                        <p className="text-zinc-400 mb-2">{item.category}</p>
+                      <div className="flex-1 space-y-2">
+                        <h3 className="text-lg sm:text-xl font-semibold text-white">{item.name}</h3>
+                        <p className="text-zinc-400 text-sm sm:text-base">{item.category}</p>
                         {item.sustainable && (
-                          <span className="inline-block bg-green-600/20 text-green-400 text-sm px-3 py-1 rounded-full mb-2">
+                          <span className="inline-block bg-green-600/20 text-green-400 text-xs sm:text-sm px-3 py-1 rounded-full">
                             Sustainable Choice
                           </span>
                         )}
-                        <p className="text-2xl font-bold text-emerald-400">${item.price.toFixed(2)}</p>
+                        <p className="text-xl sm:text-2xl font-bold text-emerald-400">${item.price.toFixed(2)}</p>
                       </div>
-                      <div className="flex flex-col items-end gap-4">
+                      
+                      {/* Mobile-friendly controls */}
+                      <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-start gap-4">
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => removeItem(item.id)}
-                          className="text-red-400 hover:text-red-300 hover:bg-red-900/20"
+                          className="text-red-400 hover:text-red-300 hover:bg-red-900/20 tap-target"
                         >
                           <Trash2 className="h-5 w-5" />
                         </Button>
+                        
                         <div className="flex items-center gap-3">
                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                            className="h-10 w-10 p-0 border-emerald-400/30 text-emerald-400 hover:bg-emerald-900/30"
+                            className="h-10 w-10 p-0 border-emerald-400/30 text-emerald-400 hover:bg-emerald-900/30 tap-target"
                           >
                             <Minus className="h-4 w-4" />
                           </Button>
@@ -100,7 +103,7 @@ const Cart = () => {
                             variant="outline"
                             size="sm"
                             onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                            className="h-10 w-10 p-0 border-emerald-400/30 text-emerald-400 hover:bg-emerald-900/30"
+                            className="h-10 w-10 p-0 border-emerald-400/30 text-emerald-400 hover:bg-emerald-900/30 tap-target"
                           >
                             <Plus className="h-4 w-4" />
                           </Button>
@@ -112,11 +115,11 @@ const Cart = () => {
               ))}
             </div>
 
-            {/* Order Summary */}
+            {/* Responsive Order Summary */}
             <div className="lg:col-span-1">
-              <Card className="bg-zinc-900 border-emerald-400/20 sticky top-24">
+              <Card className="bg-zinc-900 border-emerald-400/20 sticky top-20 sm:top-24">
                 <CardHeader>
-                  <CardTitle className="text-2xl font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
+                  <CardTitle className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
                     Order Summary
                   </CardTitle>
                 </CardHeader>
@@ -140,14 +143,14 @@ const Cart = () => {
                       <Link to="/shop" className="block">
                         <Button 
                           variant="outline" 
-                          className="w-full border-emerald-400/50 text-emerald-400 hover:bg-emerald-900/30"
+                          className="w-full border-emerald-400/50 text-emerald-400 hover:bg-emerald-900/30 btn-responsive"
                         >
                           Continue Shopping
                         </Button>
                       </Link>
                       
                       <Link to="/cart/checkout" className="block">
-                        <Button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-semibold text-lg py-3">
+                        <Button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-semibold btn-responsive">
                           Proceed to Checkout
                           <ArrowRight className="ml-2 h-5 w-5" />
                         </Button>

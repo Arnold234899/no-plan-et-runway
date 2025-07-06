@@ -29,9 +29,9 @@ export const seedProducts = async () => {
       description: product.description,
       price: product.price,
       category: product.category,
-      image_url: product.image,
+      image_url: product.image_url, // Fixed: was 'image'
       sustainable: product.sustainable,
-      is_new: product.isNew,
+      is_new: product.is_new, // Fixed: was 'isNew'
       bestseller: product.bestseller,
       stock_quantity: 50, // Set a good stock quantity
       is_active: true

@@ -106,25 +106,25 @@ const Shop = () => {
     <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
       <Navigation theme={theme} toggleTheme={toggleTheme} />
       
-      <div className="pt-20 px-4 sm:px-6 lg:px-8">
+      <div className="pt-16 sm:pt-20 container-responsive">
         <div className="max-w-7xl mx-auto">
-          {/* Header */}
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-emerald-400 via-blue-400 to-teal-400 bg-clip-text text-transparent mb-4">
+          {/* Responsive Header */}
+          <div className="text-center mb-8 sm:mb-12 section-spacing">
+            <h1 className="font-bold bg-gradient-to-r from-emerald-400 via-blue-400 to-teal-400 bg-clip-text text-transparent mb-4">
               NO PLAN-ET B Shop
             </h1>
-            <p className="text-xl text-zinc-300 max-w-3xl mx-auto">
+            <p className="text-base sm:text-xl text-zinc-300 max-w-3xl mx-auto px-4">
               Sustainable fashion that doesn't compromise on style. Every purchase makes a difference.
             </p>
           </div>
 
-          {/* Filters */}
-          <div className="flex flex-col md:flex-row gap-4 mb-8">
+          {/* Responsive Filters */}
+          <div className="flex flex-col sm:flex-row gap-4 mb-6 sm:mb-8 px-4">
             <Select value={filterCategory} onValueChange={setFilterCategory}>
-              <SelectTrigger className="w-full md:w-48 bg-zinc-900 border-zinc-700 text-white">
+              <SelectTrigger className="w-full sm:w-48 bg-zinc-900 border-zinc-700 text-white">
                 <SelectValue placeholder="Filter by category" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-zinc-900 border-zinc-700">
                 <SelectItem value="all">All Categories</SelectItem>
                 {categories.map(category => (
                   <SelectItem key={category} value={category}>
@@ -135,10 +135,10 @@ const Shop = () => {
             </Select>
 
             <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-full md:w-48 bg-zinc-900 border-zinc-700 text-white">
+              <SelectTrigger className="w-full sm:w-48 bg-zinc-900 border-zinc-700 text-white">
                 <SelectValue placeholder="Sort by" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-zinc-900 border-zinc-700">
                 <SelectItem value="name">Name A-Z</SelectItem>
                 <SelectItem value="price-low">Price: Low to High</SelectItem>
                 <SelectItem value="price-high">Price: High to Low</SelectItem>
@@ -146,8 +146,8 @@ const Shop = () => {
             </Select>
           </div>
 
-          {/* Products Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-16">
+          {/* Responsive Products Grid */}
+          <div className="responsive-grid mb-12 sm:mb-16">
             {filteredAndSortedProducts.map((product) => (
               <div
                 key={product.id}
@@ -158,56 +158,56 @@ const Shop = () => {
                   <img
                     src={product.image_url}
                     alt={product.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    className="responsive-image group-hover:scale-110 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </div>
 
                 {/* Product Info */}
-                <div className="p-6">
-                  <div className="flex gap-2 mb-3">
+                <div className="card-spacing">
+                  <div className="flex flex-wrap gap-2 mb-3">
                     {product.sustainable && (
-                      <Badge className="bg-green-600/20 text-green-400 border-green-400/30">
+                      <Badge className="bg-green-600/20 text-green-400 border-green-400/30 text-xs">
                         Sustainable
                       </Badge>
                     )}
                     {product.is_new && (
-                      <Badge className="bg-blue-600/20 text-blue-400 border-blue-400/30">
+                      <Badge className="bg-blue-600/20 text-blue-400 border-blue-400/30 text-xs">
                         New
                       </Badge>
                     )}
                     {product.bestseller && (
-                      <Badge className="bg-yellow-600/20 text-yellow-400 border-yellow-400/30">
+                      <Badge className="bg-yellow-600/20 text-yellow-400 border-yellow-400/30 text-xs">
                         <Star className="w-3 h-3 mr-1" />
                         Bestseller
                       </Badge>
                     )}
                   </div>
 
-                  <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-emerald-400 transition-colors">
+                  <h3 className="text-lg sm:text-xl font-semibold text-white mb-2 group-hover:text-emerald-400 transition-colors line-clamp-2">
                     {product.name}
                   </h3>
                   <p className="text-zinc-400 text-sm mb-3 line-clamp-2">
                     {product.description}
                   </p>
-                  <p className="text-2xl font-bold text-emerald-400 mb-4">
+                  <p className="text-xl sm:text-2xl font-bold text-emerald-400 mb-4">
                     ${product.price}
                   </p>
 
-                  {/* Action Buttons */}
-                  <div className="flex gap-2">
+                  {/* Responsive Action Buttons */}
+                  <div className="flex flex-col sm:flex-row gap-2">
                     <Button
                       onClick={() => handleAddToCart(product)}
-                      className="flex-1 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white"
+                      className="flex-1 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white btn-responsive"
                       disabled={product.stock_quantity === 0}
                     >
                       <Plus className="w-4 h-4 mr-2" />
                       Add to Cart
                     </Button>
-                    <Link to={`/checkout/${product.id}`}>
+                    <Link to={`/checkout/${product.id}`} className="flex-1">
                       <Button
                         variant="outline"
-                        className="border-emerald-400/50 text-emerald-400 hover:bg-emerald-900/30"
+                        className="w-full border-emerald-400/50 text-emerald-400 hover:bg-emerald-900/30 btn-responsive"
                         disabled={product.stock_quantity === 0}
                       >
                         <ShoppingBag className="w-4 h-4 mr-2" />
@@ -222,7 +222,7 @@ const Shop = () => {
                 </div>
 
                 {/* Wishlist Button */}
-                <button className="absolute top-4 right-4 p-2 bg-black/50 backdrop-blur-sm rounded-full text-white hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100">
+                <button className="absolute top-4 right-4 p-2 bg-black/50 backdrop-blur-sm rounded-full text-white hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100 tap-target">
                   <Heart className="w-5 h-5" />
                 </button>
               </div>

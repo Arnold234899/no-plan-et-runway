@@ -101,6 +101,29 @@
     min-height: 100vh;
   }
 
+  /* Responsive typography */
+  h1 {
+    @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl;
+  }
+
+  h2 {
+    @apply text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl;
+  }
+
+  h3 {
+    @apply text-lg sm:text-xl md:text-2xl lg:text-3xl;
+  }
+
+  /* Responsive buttons */
+  .btn-responsive {
+    @apply px-4 py-2 text-sm sm:px-6 sm:py-3 sm:text-base md:px-8 md:py-4 md:text-lg;
+  }
+
+  /* Responsive containers */
+  .container-responsive {
+    @apply px-4 sm:px-6 lg:px-8 xl:px-12;
+  }
+
   /* Earth-inspired gradient backgrounds */
   .earth-gradient {
     background: linear-gradient(135deg, #1e3a8a 0%, #0d9488 50%, #059669 100%);
@@ -113,4 +136,93 @@
   .forest-gradient {
     background: linear-gradient(135deg, #064e3b 0%, #059669 50%, #10b981 100%);
   }
+
+  /* Responsive spacing utilities */
+  .section-spacing {
+    @apply py-8 sm:py-12 md:py-16 lg:py-20 xl:py-24;
+  }
+
+  .card-spacing {
+    @apply p-4 sm:p-6 lg:p-8;
+  }
+
+  /* Mobile-first responsive grid */
+  .responsive-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8;
+  }
+
+  /* Responsive text sizing */
+  .text-responsive {
+    @apply text-sm sm:text-base md:text-lg;
+  }
+
+  .text-responsive-small {
+    @apply text-xs sm:text-sm md:text-base;
+  }
+
+  /* Mobile navigation improvements */
+  .mobile-nav {
+    @apply block md:hidden;
+  }
+
+  .desktop-nav {
+    @apply hidden md:block;
+  }
+
+  /* Responsive images */
+  .responsive-image {
+    @apply w-full h-auto object-cover;
+  }
+
+  /* Touch-friendly tap targets */
+  .tap-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+
+  /* Responsive form elements */
+  .form-responsive {
+    @apply w-full px-3 py-2 sm:px-4 sm:py-3 text-sm sm:text-base;
+  }
+}
+
+/* Custom responsive breakpoints for specific components */
+@media (max-width: 640px) {
+  .hero-mobile {
+    @apply text-center px-4 py-8;
+  }
+  
+  .product-card-mobile {
+    @apply flex-col space-y-2;
+  }
+  
+  .button-stack-mobile {
+    @apply flex-col space-y-2 w-full;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .tablet-layout {
+    @apply grid-cols-2 gap-6;
+  }
+}
+
+@media (min-width: 1025px) {
+  .desktop-layout {
+    @apply grid-cols-3 lg:grid-cols-4 gap-8;
+  }
+}
+
+/* Ensure all interactive elements are touch-friendly */
+button, a, input, select, textarea {
+  @apply tap-target;
+}
+
+/* Responsive overflow handling */
+.responsive-overflow {
+  @apply overflow-x-auto sm:overflow-x-visible;
+}
+
+/* Mobile-first approach for complex layouts */
+.complex-layout {
+  @apply flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-4 sm:space-y-0 sm:space-x-4;
 }
