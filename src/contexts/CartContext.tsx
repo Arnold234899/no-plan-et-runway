@@ -31,12 +31,17 @@ type CartAction =
 const cartReducer = (state: CartState, action: CartAction): CartState => {
   switch (action.type) {
     case 'ADD_ITEM': {
-      const existingItem = state.items.find(item => item.id === action.payload.id);
+      const existingItemIndex = state.items.findIndex(item => 
+        item.id === action.payload.id && 
+        item.size === action.payload.size &&
+        item.color === action.payload.color
+      );
+      
       let newItems;
       
-      if (existingItem) {
-        newItems = state.items.map(item =>
-          item.id === action.payload.id
+      if (existingItemIndex >= 0) {
+        newItems = state.items.map((item, index) =>
+          index === existingItemIndex
             ? { ...item, quantity: item.quantity + action.payload.quantity }
             : item
         );
@@ -123,9 +128,10 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const addItem = (item: Omit<CartItem, 'quantity'>, quantity = 1) => {
     dispatch({ type: 'ADD_ITEM', payload: { ...item, quantity } });
-    toast.success(`${item.name} added to cart!`, {
-      description: `Quantity: ${quantity}`,
-      duration: 2000,
+    const sizeText = item.size ? ` (Size: ${item.size})` : '';
+    toast.success(`${item.name}${sizeText} added to cart!`, {
+      description: `Quantity: ${quantity} • $${(item.price * quantity).toFixed(2)}`,
+      duration: 3000,
     });
   };
 
@@ -143,7 +149,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const clearCart = () => {
     dispatch({ type: 'CLEAR_CART' });
-    toast.success('Cart cleared');
+    toast.success('Cart cleared - Ready for a new sustainable shopping experience!');
   };
 
   return (

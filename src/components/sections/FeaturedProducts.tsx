@@ -7,7 +7,6 @@ import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { seedProducts } from "@/utils/seedProducts";
 import { useCart } from "@/contexts/CartContext";
-import { toast } from "sonner";
 
 interface Product {
   id: string;
@@ -72,7 +71,7 @@ export const FeaturedProducts = () => {
     return (
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-950 via-blue-950 to-emerald-950">
         <div className="max-w-7xl mx-auto text-center">
-          <div className="text-white">Loading products...</div>
+          <div className="text-emerald-400 text-xl">Loading sustainable collection...</div>
         </div>
       </section>
     );
@@ -138,19 +137,19 @@ export const FeaturedProducts = () => {
                 </p>
 
                 {/* Action Buttons */}
-                <div className="flex gap-2">
+                <div className="space-y-2">
                   <Button
                     onClick={() => handleAddToCart(product)}
-                    className="flex-1 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white"
+                    className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white"
                     disabled={product.stock_quantity === 0}
                   >
                     <Plus className="w-4 h-4 mr-2" />
                     Add to Cart
                   </Button>
-                  <Link to={`/checkout/${product.id}`}>
+                  <Link to={`/checkout/${product.id}`} className="block">
                     <Button
                       variant="outline"
-                      className="border-emerald-400/50 text-emerald-400 hover:bg-emerald-900/30"
+                      className="w-full border-emerald-400/50 text-emerald-400 hover:bg-emerald-900/30"
                       disabled={product.stock_quantity === 0}
                     >
                       <ShoppingBag className="w-4 h-4 mr-2" />

@@ -95,7 +95,10 @@ const Shop = () => {
       <div className="min-h-screen bg-background text-foreground">
         <Navigation theme={theme} toggleTheme={toggleTheme} />
         <div className="pt-20 flex items-center justify-center min-h-[50vh]">
-          <div className="text-white text-xl">Loading products...</div>
+          <div className="text-center space-y-4">
+            <div className="text-emerald-400 text-xl">Loading sustainable products...</div>
+            <div className="text-zinc-400">Building a better future, one product at a time</div>
+          </div>
         </div>
         <Footer />
       </div>
@@ -110,12 +113,21 @@ const Shop = () => {
         <div className="max-w-7xl mx-auto">
           {/* Responsive Header */}
           <div className="text-center mb-8 sm:mb-12 section-spacing">
-            <h1 className="font-bold bg-gradient-to-r from-emerald-400 via-blue-400 to-teal-400 bg-clip-text text-transparent mb-4">
-              NO PLAN-ET B Shop
-            </h1>
+            <Link to="/" className="inline-block mb-4">
+              <h1 className="font-bold bg-gradient-to-r from-emerald-400 via-blue-400 to-teal-400 bg-clip-text text-transparent mb-4 hover:from-emerald-300 hover:to-blue-300 transition-all duration-300">
+                NO PLAN-ET B Shop
+              </h1>
+            </Link>
             <p className="text-base sm:text-xl text-zinc-300 max-w-3xl mx-auto px-4">
               Sustainable fashion that doesn't compromise on style. Every purchase makes a difference.
             </p>
+          </div>
+
+          {/* Back to Home Link */}
+          <div className="mb-6 px-4">
+            <Link to="/" className="inline-flex items-center text-zinc-400 hover:text-emerald-400 transition-colors">
+              ← Back to Home
+            </Link>
           </div>
 
           {/* Responsive Filters */}
@@ -195,16 +207,16 @@ const Shop = () => {
                   </p>
 
                   {/* Responsive Action Buttons */}
-                  <div className="flex flex-col sm:flex-row gap-2">
+                  <div className="space-y-2">
                     <Button
                       onClick={() => handleAddToCart(product)}
-                      className="flex-1 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white btn-responsive"
+                      className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white btn-responsive"
                       disabled={product.stock_quantity === 0}
                     >
                       <Plus className="w-4 h-4 mr-2" />
                       Add to Cart
                     </Button>
-                    <Link to={`/checkout/${product.id}`} className="flex-1">
+                    <Link to={`/checkout/${product.id}`} className="block">
                       <Button
                         variant="outline"
                         className="w-full border-emerald-400/50 text-emerald-400 hover:bg-emerald-900/30 btn-responsive"
@@ -227,6 +239,18 @@ const Shop = () => {
                 </button>
               </div>
             ))}
+          </div>
+
+          {/* Back to Home Button */}
+          <div className="text-center mb-8">
+            <Link to="/">
+              <Button 
+                variant="outline" 
+                className="border-emerald-400/50 text-emerald-400 hover:bg-emerald-900/30 px-8 py-3 text-lg"
+              >
+                Return to Home
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
