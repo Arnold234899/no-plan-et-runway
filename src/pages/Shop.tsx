@@ -1,8 +1,8 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ShoppingBag, ArrowLeft } from "lucide-react";
 import { ProductSorting } from "@/components/shop/ProductSorting";
+import { WishlistButton } from "@/components/wishlist/WishlistButton";
 import { Navigation } from "@/components/layout/Navigation";
 import { Footer } from "@/components/layout/Footer";
 import { Link } from "react-router-dom";
@@ -19,6 +19,7 @@ type Product = {
   sustainable: boolean;
   isNew: boolean;
   bestseller: boolean;
+  stockQuantity: number;
 };
 
 const Shop = () => {
@@ -68,6 +69,7 @@ const Shop = () => {
         sustainable: product.sustainable || false,
         isNew: product.is_new || false,
         bestseller: product.bestseller || false,
+        stockQuantity: product.stock_quantity || 0,
       }));
 
       setProducts(formattedProducts);
@@ -194,13 +196,30 @@ const Shop = () => {
                             Bestseller
                           </div>
                         )}
+                        {product.stockQuantity <= 5 && product.stockQuantity > 0 && (
+                          <div className="bg-orange-600 text-white text-xs px-2 py-1 rounded-full">
+                            Low Stock
+                          </div>
+                        )}
+                        {product.stockQuantity === 0 && (
+                          <div className="bg-red-600 text-white text-xs px-2 py-1 rounded-full">
+                            Out of Stock
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="absolute top-4 right-4">
+                        <WishlistButton productId={product.id} />
                       </div>
                       
                       <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <Link to={`/checkout/${product.id}`}>
-                          <Button className="bg-white text-zinc-950 hover:bg-zinc-100">
+                          <Button 
+                            className="bg-white text-zinc-950 hover:bg-zinc-100"
+                            disabled={product.stockQuantity === 0}
+                          >
                             <ShoppingBag className="w-4 h-4 mr-2" />
-                            Quick Shop
+                            {product.stockQuantity === 0 ? 'Out of Stock' : 'Quick Shop'}
                           </Button>
                         </Link>
                       </div>
@@ -209,7 +228,12 @@ const Shop = () => {
                     <div className="p-6">
                       <p className="text-zinc-500 text-sm mb-1">{product.category}</p>
                       <h3 className="text-white font-semibold text-lg mb-2">{product.name}</h3>
-                      <p className="text-zinc-300 text-xl font-bold">{product.priceDisplay}</p>
+                      <div className="flex items-center justify-between">
+                        <p className="text-zinc-300 text-xl font-bold">{product.priceDisplay}</p>
+                        {product.stockQuantity <= 5 && product.stockQuantity > 0 && (
+                          <p className="text-orange-500 text-xs">Only {product.stockQuantity} left</p>
+                        )}
+                      </div>
                     </div>
                   </div>
                 ))}
