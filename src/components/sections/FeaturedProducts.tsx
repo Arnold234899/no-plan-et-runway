@@ -1,28 +1,31 @@
+
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { ShoppingBag } from "lucide-react";
-import { ProductSorting } from "@/components/shop/ProductSorting";
+import { Badge } from "@/components/ui/badge";
+import { ShoppingBag, Heart, Star, Plus } from "lucide-react";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { seedProducts } from "@/utils/seedProducts";
-import { Link } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
+import { toast } from "sonner";
 
-export type Product = {
+interface Product {
   id: string;
   name: string;
+  description: string;
   price: number;
-  priceDisplay: string;
-  image: string;
   category: string;
+  image_url: string;
   sustainable: boolean;
-  isNew: boolean;
+  is_new: boolean;
   bestseller: boolean;
-};
+  stock_quantity: number;
+}
 
 export const FeaturedProducts = () => {
-  const [sortBy, setSortBy] = useState("newest");
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const { addItem } = useCart();
 
   useEffect(() => {
     fetchProducts();
@@ -30,188 +33,153 @@ export const FeaturedProducts = () => {
 
   const fetchProducts = async () => {
     try {
-      // First try to seed products if needed
+      // Trigger seeding first
       await seedProducts();
-
+      
+      // Then fetch products
       const { data, error } = await supabase
         .from('products')
         .select('*')
         .eq('is_active', true)
-        .limit(12);
+        .order('created_at', { ascending: false })
+        .limit(8);
 
       if (error) {
-        console.error('Error fetching products:', error);
+        console.error("Error fetching products:", error);
         return;
       }
 
-      const formattedProducts: Product[] = (data || []).map(product => ({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        priceDisplay: `$${product.price}`,
-        image: product.image_url || `https://images.unsplash.com/photo-${Date.now()}?w=400&h=600&fit=crop`,
-        category: product.category,
-        sustainable: product.sustainable || false,
-        isNew: product.is_new || false,
-        bestseller: product.bestseller || false,
-      }));
-
-      setProducts(formattedProducts);
+      setProducts(data || []);
     } catch (error) {
-      console.error('Error fetching products:', error);
+      console.error("Error in fetchProducts:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  const sortProducts = (products: Product[], sortBy: string): Product[] => {
-    const sorted = [...products];
-    
-    switch (sortBy) {
-      case "name-asc":
-        return sorted.sort((a, b) => a.name.localeCompare(b.name));
-      case "name-desc":
-        return sorted.sort((a, b) => b.name.localeCompare(a.name));
-      case "price-low":
-        return sorted.sort((a, b) => a.price - b.price);
-      case "price-high":
-        return sorted.sort((a, b) => b.price - a.price);
-      case "newest":
-        return sorted.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0));
-      case "bestsellers":
-        return sorted.sort((a, b) => (b.bestseller ? 1 : 0) - (a.bestseller ? 1 : 0));
-      default:
-        return sorted;
-    }
+  const handleAddToCart = (product: Product) => {
+    addItem({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image_url,
+      category: product.category,
+      sustainable: product.sustainable
+    });
   };
-
-  const sortedProducts = sortProducts(products, sortBy);
 
   if (loading) {
     return (
-      <section id="shop" className="py-20 px-4 sm:px-6 lg:px-8 bg-zinc-950">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-6xl font-bold text-white mb-4 tracking-tight">
-              Featured Collection
-            </h2>
-            <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
-              Curated pieces that challenge conventions and embrace the future of conscious fashion.
-            </p>
-          </div>
-          <div className="flex justify-center">
-            <div className="text-white">Loading products...</div>
-          </div>
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-950 via-blue-950 to-emerald-950">
+        <div className="max-w-7xl mx-auto text-center">
+          <div className="text-white">Loading products...</div>
         </div>
       </section>
     );
   }
 
   return (
-    <section id="shop" className="py-20 px-4 sm:px-6 lg:px-8 bg-zinc-950">
+    <section id="shop" className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-950 via-blue-950 to-emerald-950">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-6xl font-bold text-white mb-4 tracking-tight">
-            Featured Collection
+        <div className="text-center mb-12">
+          <h2 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-emerald-400 via-blue-400 to-teal-400 bg-clip-text text-transparent mb-4">
+            NO PLAN-ET B Collection
           </h2>
-          <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
-            Curated pieces that challenge conventions and embrace the future of conscious fashion.
+          <p className="text-xl text-zinc-300 max-w-3xl mx-auto leading-relaxed">
+            Discover our curated collection of sustainable fashion pieces that prove style and sustainability can coexist beautifully.
           </p>
         </div>
 
-        <ProductSorting sortBy={sortBy} onSortChange={setSortBy} />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {products.map((product) => (
+            <div
+              key={product.id}
+              className="group relative bg-zinc-900/50 backdrop-blur-sm rounded-xl overflow-hidden border border-emerald-400/20 hover:border-emerald-400/60 transition-all duration-300 hover:transform hover:scale-105"
+            >
+              {/* Product Image */}
+              <div className="aspect-[3/4] overflow-hidden">
+                <img
+                  src={product.image_url}
+                  alt={product.name}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {sortedProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
+              {/* Product Info */}
+              <div className="p-6">
+                <div className="flex gap-2 mb-3">
+                  {product.sustainable && (
+                    <Badge className="bg-green-600/20 text-green-400 border-green-400/30">
+                      Sustainable
+                    </Badge>
+                  )}
+                  {product.is_new && (
+                    <Badge className="bg-blue-600/20 text-blue-400 border-blue-400/30">
+                      New
+                    </Badge>
+                  )}
+                  {product.bestseller && (
+                    <Badge className="bg-yellow-600/20 text-yellow-400 border-yellow-400/30">
+                      <Star className="w-3 h-3 mr-1" />
+                      Bestseller
+                    </Badge>
+                  )}
+                </div>
+
+                <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-emerald-400 transition-colors">
+                  {product.name}
+                </h3>
+                <p className="text-zinc-400 text-sm mb-3 line-clamp-2">
+                  {product.description}
+                </p>
+                <p className="text-2xl font-bold text-emerald-400 mb-4">
+                  ${product.price}
+                </p>
+
+                {/* Action Buttons */}
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => handleAddToCart(product)}
+                    className="flex-1 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white"
+                    disabled={product.stock_quantity === 0}
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add to Cart
+                  </Button>
+                  <Link to={`/checkout/${product.id}`}>
+                    <Button
+                      variant="outline"
+                      className="border-emerald-400/50 text-emerald-400 hover:bg-emerald-900/30"
+                      disabled={product.stock_quantity === 0}
+                    >
+                      <ShoppingBag className="w-4 h-4 mr-2" />
+                      Buy Now
+                    </Button>
+                  </Link>
+                </div>
+
+                {product.stock_quantity === 0 && (
+                  <p className="text-red-400 text-sm mt-2 font-semibold">Out of Stock</p>
+                )}
+              </div>
+
+              {/* Wishlist Button */}
+              <button className="absolute top-4 right-4 p-2 bg-black/50 backdrop-blur-sm rounded-full text-white hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100">
+                <Heart className="w-5 h-5" />
+              </button>
+            </div>
           ))}
         </div>
 
         <div className="text-center mt-12">
           <Link to="/shop">
-            <Button 
-              variant="outline" 
-              size="lg"
-              className="border-zinc-600 text-white hover:bg-zinc-800 text-lg px-8 py-4"
-            >
+            <Button className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white px-8 py-3 text-lg">
               View All Products
             </Button>
           </Link>
         </div>
       </div>
     </section>
-  );
-};
-
-// Extract ProductCard to separate component for better organization
-const ProductCard = ({ product }: { product: Product }) => {
-  const { addItem } = useCart();
-
-  const handleAddToCart = (e: React.MouseEvent) => {
-    e.preventDefault();
-    addItem({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      image: product.image,
-      category: product.category,
-      sustainable: product.sustainable
-    });
-  };
-
-  return (
-    <div className="group relative overflow-hidden bg-zinc-900 rounded-lg hover:transform hover:scale-105 transition-all duration-500">
-      <div className="aspect-[3/4] overflow-hidden">
-        <img
-          src={product.image}
-          alt={product.name}
-          loading="lazy"
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-        />
-        
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300"></div>
-        
-        <div className="absolute top-4 left-4 space-y-2">
-          {product.sustainable && (
-            <div className="bg-green-600 text-white text-xs px-2 py-1 rounded-full">
-              Sustainable
-            </div>
-          )}
-          {product.isNew && (
-            <div className="bg-blue-600 text-white text-xs px-2 py-1 rounded-full">
-              New
-            </div>
-          )}
-          {product.bestseller && (
-            <div className="bg-orange-600 text-white text-xs px-2 py-1 rounded-full">
-              Bestseller
-            </div>
-          )}
-        </div>
-        
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <div className="flex gap-2">
-            <Button 
-              onClick={handleAddToCart}
-              className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white"
-            >
-              <ShoppingBag className="w-4 h-4 mr-2" />
-              Add to Cart
-            </Button>
-            <Link to={`/checkout/${product.id}`}>
-              <Button variant="secondary">
-                Quick View
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      <div className="p-6">
-        <p className="text-zinc-500 text-sm mb-1">{product.category}</p>
-        <h3 className="text-white font-semibold text-lg mb-2">{product.name}</h3>
-        <p className="text-zinc-300 text-xl font-bold">{product.priceDisplay}</p>
-      </div>
-    </div>
   );
 };
