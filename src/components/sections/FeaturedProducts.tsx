@@ -1,9 +1,9 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ShoppingBag } from "lucide-react";
 import { ProductSorting } from "@/components/shop/ProductSorting";
 import { supabase } from "@/integrations/supabase/client";
+import { seedProducts } from "@/utils/seedProducts";
 import { Link } from "react-router-dom";
 
 export type Product = {
@@ -29,11 +29,14 @@ export const FeaturedProducts = () => {
 
   const fetchProducts = async () => {
     try {
+      // First try to seed products if needed
+      await seedProducts();
+
       const { data, error } = await supabase
         .from('products')
         .select('*')
         .eq('is_active', true)
-        .limit(8);
+        .limit(12);
 
       if (error) {
         console.error('Error fetching products:', error);

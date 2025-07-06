@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -33,34 +32,54 @@ export const useReviews = (productId: string) => {
 
   const fetchReviews = async () => {
     try {
-      const { data, error } = await supabase
+      // Fetch reviews and user data separately since there's no direct relationship
+      const { data: reviewsData, error: reviewsError } = await supabase
         .from('product_reviews')
-        .select(`
-          *,
-          website_users!inner (first_name, last_name)
-        `)
+        .select('*')
         .eq('product_id', productId)
         .eq('is_approved', true)
         .order('created_at', { ascending: false });
 
-      if (error) {
-        console.error('Error fetching reviews:', error);
+      if (reviewsError) {
+        console.error('Error fetching reviews:', reviewsError);
         return;
       }
 
+      // Get unique user IDs from reviews
+      const userIds = [...new Set(reviewsData?.map(review => review.user_id) || [])];
+      
+      // Fetch user data for those IDs
+      const { data: usersData, error: usersError } = await supabase
+        .from('website_users')
+        .select('user_id, first_name, last_name')
+        .in('user_id', userIds);
+
+      if (usersError) {
+        console.error('Error fetching users:', usersError);
+      }
+
+      // Create a map of user data for quick lookup
+      const usersMap = new Map();
+      (usersData || []).forEach(user => {
+        usersMap.set(user.user_id, user);
+      });
+
       // Transform the data to match our Review interface
-      const transformedReviews = (data || []).map((review) => ({
-        id: review.id,
-        rating: review.rating,
-        title: review.title,
-        comment: review.comment,
-        is_verified_purchase: review.is_verified_purchase,
-        created_at: review.created_at,
-        website_users: {
-          first_name: review.website_users?.first_name || null,
-          last_name: review.website_users?.last_name || null,
-        },
-      })) as Review[];
+      const transformedReviews = (reviewsData || []).map((review) => {
+        const userData = usersMap.get(review.user_id) || {};
+        return {
+          id: review.id,
+          rating: review.rating,
+          title: review.title,
+          comment: review.comment,
+          is_verified_purchase: review.is_verified_purchase,
+          created_at: review.created_at,
+          website_users: {
+            first_name: userData.first_name || null,
+            last_name: userData.last_name || null,
+          },
+        };
+      }) as Review[];
 
       setReviews(transformedReviews);
     } catch (error) {
