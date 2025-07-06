@@ -5,6 +5,7 @@ import { ProductSorting } from "@/components/shop/ProductSorting";
 import { supabase } from "@/integrations/supabase/client";
 import { seedProducts } from "@/utils/seedProducts";
 import { Link } from "react-router-dom";
+import { useCart } from "@/contexts/CartContext";
 
 export type Product = {
   id: string;
@@ -122,54 +123,7 @@ export const FeaturedProducts = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {sortedProducts.map((product) => (
-            <div
-              key={product.id}
-              className="group relative overflow-hidden bg-zinc-900 rounded-lg hover:transform hover:scale-105 transition-all duration-500"
-            >
-              <div className="aspect-[3/4] overflow-hidden">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  loading="lazy"
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                />
-                
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300"></div>
-                
-                <div className="absolute top-4 left-4 space-y-2">
-                  {product.sustainable && (
-                    <div className="bg-green-600 text-white text-xs px-2 py-1 rounded-full">
-                      Sustainable
-                    </div>
-                  )}
-                  {product.isNew && (
-                    <div className="bg-blue-600 text-white text-xs px-2 py-1 rounded-full">
-                      New
-                    </div>
-                  )}
-                  {product.bestseller && (
-                    <div className="bg-orange-600 text-white text-xs px-2 py-1 rounded-full">
-                      Bestseller
-                    </div>
-                  )}
-                </div>
-                
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <Link to={`/checkout/${product.id}`}>
-                    <Button className="bg-white text-zinc-950 hover:bg-zinc-100">
-                      <ShoppingBag className="w-4 h-4 mr-2" />
-                      Quick Shop
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-
-              <div className="p-6">
-                <p className="text-zinc-500 text-sm mb-1">{product.category}</p>
-                <h3 className="text-white font-semibold text-lg mb-2">{product.name}</h3>
-                <p className="text-zinc-300 text-xl font-bold">{product.priceDisplay}</p>
-              </div>
-            </div>
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
 
@@ -186,5 +140,78 @@ export const FeaturedProducts = () => {
         </div>
       </div>
     </section>
+  );
+};
+
+// Extract ProductCard to separate component for better organization
+const ProductCard = ({ product }: { product: Product }) => {
+  const { addItem } = useCart();
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    addItem({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      category: product.category,
+      sustainable: product.sustainable
+    });
+  };
+
+  return (
+    <div className="group relative overflow-hidden bg-zinc-900 rounded-lg hover:transform hover:scale-105 transition-all duration-500">
+      <div className="aspect-[3/4] overflow-hidden">
+        <img
+          src={product.image}
+          alt={product.name}
+          loading="lazy"
+          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+        />
+        
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300"></div>
+        
+        <div className="absolute top-4 left-4 space-y-2">
+          {product.sustainable && (
+            <div className="bg-green-600 text-white text-xs px-2 py-1 rounded-full">
+              Sustainable
+            </div>
+          )}
+          {product.isNew && (
+            <div className="bg-blue-600 text-white text-xs px-2 py-1 rounded-full">
+              New
+            </div>
+          )}
+          {product.bestseller && (
+            <div className="bg-orange-600 text-white text-xs px-2 py-1 rounded-full">
+              Bestseller
+            </div>
+          )}
+        </div>
+        
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div className="flex gap-2">
+            <Button 
+              onClick={handleAddToCart}
+              className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white"
+            >
+              <ShoppingBag className="w-4 h-4 mr-2" />
+              Add to Cart
+            </Button>
+            <Link to={`/checkout/${product.id}`}>
+              <Button variant="secondary">
+                Quick View
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      <div className="p-6">
+        <p className="text-zinc-500 text-sm mb-1">{product.category}</p>
+        <h3 className="text-white font-semibold text-lg mb-2">{product.name}</h3>
+        <p className="text-zinc-300 text-xl font-bold">{product.priceDisplay}</p>
+      </div>
+    </div>
   );
 };

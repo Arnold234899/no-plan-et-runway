@@ -1,9 +1,10 @@
 
 import { useState } from "react";
-import { Menu, X, ShoppingBag } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { AuthButton } from "@/components/auth/AuthButton";
+import { CartButton } from "@/components/cart/CartButton";
 
 interface NavigationProps {
   theme: 'light' | 'dark';
@@ -51,20 +52,14 @@ export const Navigation = ({ theme, toggleTheme }: NavigationProps) => {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-4">
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="text-white hover:bg-emerald-900/30 hover:text-emerald-400 transition-all duration-300 group border border-emerald-400/20 hover:border-emerald-400/60"
-            >
-              <ShoppingBag className="h-5 w-5 group-hover:text-teal-400 transition-colors duration-300" />
-              <span className="ml-2">Cart (0)</span>
-            </Button>
+            <CartButton />
             <AuthButton />
             <ThemeToggle theme={theme} onToggle={toggleTheme} />
           </div>
 
           {/* Mobile menu button */}
           <div className="flex items-center gap-2 md:hidden">
+            <CartButton />
             <AuthButton />
             <ThemeToggle theme={theme} onToggle={toggleTheme} />
             <Button
@@ -94,16 +89,6 @@ export const Navigation = ({ theme, toggleTheme }: NavigationProps) => {
                 {item.name}
               </a>
             ))}
-            <div className="px-3 py-2">
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="text-white hover:bg-emerald-900/30 hover:text-emerald-400 w-full justify-start transition-all duration-300 group border border-emerald-400/20 hover:border-emerald-400/60"
-              >
-                <ShoppingBag className="h-5 w-5 mr-2 group-hover:text-teal-400 transition-colors duration-300" />
-                Cart (0)
-              </Button>
-            </div>
           </div>
         </div>
       )}
