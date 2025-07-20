@@ -13,7 +13,7 @@ import { Navigation } from '@/components/layout/Navigation';
 import { Footer } from '@/components/layout/Footer';
 import { GuestCheckoutForm, GuestCheckoutData } from '@/components/checkout/GuestCheckoutForm';
 import { toast } from 'sonner';
-import { supabase } from '@/integrations/supabase/client';
+
 import { Link } from 'react-router-dom';
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 import { useTheme } from '@/hooks/useTheme';

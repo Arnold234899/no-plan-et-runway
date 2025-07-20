@@ -8,8 +8,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ShoppingBag, Heart, Star, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useTheme } from "@/hooks/useTheme";
-import { supabase } from "@/integrations/supabase/client";
-import { seedProducts } from "@/utils/seedProducts";
 import { useCart } from "@/contexts/CartContext";
 
 interface Product {
