@@ -12,14 +12,45 @@ import { ArrowLeft, CreditCard, Truck } from "lucide-react";
 import { Navigation } from "@/components/layout/Navigation";
 import { Footer } from "@/components/layout/Footer";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import type { Database } from "@/integrations/supabase/types";
+import { sampleProducts } from "@/data/sampleProducts";
 
-type Product = Database['public']['Tables']['products']['Row'];
-type ProductVariant = Database['public']['Tables']['product_variants']['Row'];
-type ShippingAddress = Database['public']['Tables']['shipping_addresses']['Row'];
+type Product = {
+  id: string;
+  name: string;
+  price: number;
+  category: string;
+  image_url: string;
+  description: string;
+  sustainable: boolean;
+  is_new: boolean;
+  bestseller: boolean;
+  stock_quantity: number;
+};
+
+type ProductVariant = {
+  id: string;
+  size: string;
+  color: string;
+  price_adjustment: number;
+  stock_quantity: number;
+};
+
+type ShippingAddress = {
+  id: string;
+  first_name: string;
+  last_name: string;
+  company?: string;
+  address_line_1: string;
+  address_line_2?: string;
+  city: string;
+  state: string;
+  postal_code: string;
+  country: string;
+  phone?: string;
+  is_default: boolean;
+};
 
 type ShippingAddressForm = {
   first_name: string;
@@ -88,37 +119,17 @@ const CompleteCheckout = () => {
     if (!id) return;
 
     try {
-      const { data: productData, error: productError } = await supabase
-        .from('products')
-        .select('*')
-        .eq('id', id)
-        .eq('is_active', true)
-        .single();
-
-      if (productError) {
-        console.error('Error fetching product:', productError);
+      const productData = sampleProducts.find(p => p.id === id);
+      
+      if (!productData) {
         toast.error('Product not found');
         navigate('/shop');
         return;
       }
 
       setProduct(productData);
-
-      // Fetch variants
-      const { data: variantsData, error: variantsError } = await supabase
-        .from('product_variants')
-        .select('*')
-        .eq('product_id', id)
-        .eq('is_active', true);
-
-      if (variantsError) {
-        console.error('Error fetching variants:', variantsError);
-      } else {
-        setVariants(variantsData || []);
-        if (variantsData && variantsData.length > 0) {
-          setSelectedVariant(variantsData[0]);
-        }
-      }
+      // No variants for now in frontend-only mode
+      setVariants([]);
     } catch (error) {
       console.error('Error fetching product:', error);
       toast.error('Failed to load product');
@@ -132,33 +143,9 @@ const CompleteCheckout = () => {
     if (!user) return;
 
     try {
-      const { data, error } = await supabase
-        .from('shipping_addresses')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('is_default', { ascending: false });
-
-      if (error) {
-        console.error('Error fetching addresses:', error);
-      } else {
-        setSavedAddresses(data || []);
-        // Auto-select default address
-        const defaultAddress = data?.find(addr => addr.is_default);
-        if (defaultAddress) {
-          setShippingAddress({
-            first_name: defaultAddress.first_name,
-            last_name: defaultAddress.last_name,
-            company: defaultAddress.company || '',
-            address_line_1: defaultAddress.address_line_1,
-            address_line_2: defaultAddress.address_line_2 || '',
-            city: defaultAddress.city,
-            state: defaultAddress.state,
-            postal_code: defaultAddress.postal_code,
-            country: defaultAddress.country,
-            phone: defaultAddress.phone || ''
-          });
-        }
-      }
+      // Mock saved addresses for frontend-only mode
+      const mockAddresses: ShippingAddress[] = [];
+      setSavedAddresses(mockAddresses);
     } catch (error) {
       console.error('Error fetching addresses:', error);
     }
@@ -180,7 +167,9 @@ const CompleteCheckout = () => {
     try {
       setCreating(true);
 
-      const orderData = {
+      // Mock order creation for frontend-only mode
+      const mockOrder = {
+        id: `order-${Date.now()}`,
         user_id: user.id,
         email: user.email!,
         status: 'pending' as const,
@@ -190,43 +179,12 @@ const CompleteCheckout = () => {
         payment_id: paymentId,
         shipping_address: shippingAddress,
         billing_address: shippingAddress,
-        notes: notes || null
+        notes: notes || null,
+        created_at: new Date().toISOString()
       };
-
-      const { data: order, error: orderError } = await supabase
-        .from('orders')
-        .insert([orderData])
-        .select()
-        .single();
-
-      if (orderError) {
-        console.error('Error creating order:', orderError);
-        toast.error('Failed to create order');
-        return null;
-      }
-
-      // Create order item
-      const orderItemData = {
-        order_id: order.id,
-        product_id: product.id,
-        variant_id: selectedVariant?.id || null,
-        quantity: quantity,
-        unit_price: product.price + (selectedVariant?.price_adjustment || 0),
-        total_price: calculateTotal()
-      };
-
-      const { error: itemError } = await supabase
-        .from('order_items')
-        .insert([orderItemData]);
-
-      if (itemError) {
-        console.error('Error creating order item:', itemError);
-        toast.error('Failed to create order item');
-        return null;
-      }
 
       toast.success('Order created successfully!');
-      return order;
+      return mockOrder;
     } catch (error) {
       console.error('Error creating order:', error);
       toast.error('Failed to create order');

@@ -65,27 +65,39 @@ const OrderConfirmation = () => {
     if (!id || !user) return;
 
     try {
-      const { data, error } = await supabase
-        .from('orders')
-        .select(`
-          *,
-          order_items (
-            *,
-            products (name, image_url, category),
-            product_variants (size, color)
-          )
-        `)
-        .eq('id', id)
-        .eq('user_id', user.id)
-        .single();
+      // Mock order for frontend-only mode
+      const mockOrder: Order = {
+        id: id,
+        status: 'pending',
+        total_amount: 99.99,
+        currency: 'USD',
+        payment_method: 'paypal',
+        shipping_address: {
+          first_name: 'John',
+          last_name: 'Doe',
+          address_line_1: '123 Main St',
+          city: 'Anytown',
+          state: 'CA',
+          postal_code: '12345',
+          country: 'US'
+        },
+        created_at: new Date().toISOString(),
+        order_items: [
+          {
+            id: 'item-1',
+            quantity: 1,
+            unit_price: 99.99,
+            total_price: 99.99,
+            products: {
+              name: 'Sample Product',
+              image_url: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=600&fit=crop',
+              category: 'sustainable'
+            }
+          }
+        ]
+      };
 
-      if (error) {
-        console.error('Error fetching order:', error);
-        toast.error('Order not found');
-        return;
-      }
-
-      setOrder(data);
+      setOrder(mockOrder);
     } catch (error) {
       console.error('Error fetching order:', error);
       toast.error('Failed to load order details');

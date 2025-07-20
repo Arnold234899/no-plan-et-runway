@@ -64,26 +64,29 @@ const Orders = () => {
     if (!user) return;
 
     try {
-      const { data, error } = await supabase
-        .from('orders')
-        .select(`
-          *,
-          order_items (
-            id,
-            quantity,
-            products (name, image_url)
-          )
-        `)
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
+      // Mock orders for frontend-only mode
+      const mockOrders: Order[] = [
+        {
+          id: 'order-123',
+          status: 'delivered',
+          total_amount: 149.99,
+          currency: 'USD',
+          payment_method: 'paypal',
+          created_at: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+          order_items: [
+            {
+              id: 'item-1',
+              quantity: 2,
+              products: {
+                name: 'Sustainable T-Shirt',
+                image_url: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=600&fit=crop'
+              }
+            }
+          ]
+        }
+      ];
 
-      if (error) {
-        console.error('Error fetching orders:', error);
-        toast.error('Failed to load orders');
-        return;
-      }
-
-      setOrders(data || []);
+      setOrders(mockOrders);
     } catch (error) {
       console.error('Error fetching orders:', error);
       toast.error('Failed to load orders');

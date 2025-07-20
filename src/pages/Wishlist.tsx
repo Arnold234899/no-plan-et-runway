@@ -59,29 +59,9 @@ const Wishlist = () => {
     if (!user) return;
 
     try {
-      const { data, error } = await supabase
-        .from('wishlist')
-        .select(`
-          *,
-          products (
-            id,
-            name,
-            price,
-            image_url,
-            category,
-            stock_quantity
-          )
-        `)
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        console.error('Error fetching wishlist:', error);
-        toast.error('Failed to load wishlist');
-        return;
-      }
-
-      setWishlistItems(data || []);
+      // Mock wishlist for frontend-only mode
+      const mockWishlist: WishlistItem[] = [];
+      setWishlistItems(mockWishlist);
     } catch (error) {
       console.error('Error fetching wishlist:', error);
       toast.error('Failed to load wishlist');
@@ -92,18 +72,7 @@ const Wishlist = () => {
 
   const removeFromWishlist = async (wishlistId: string) => {
     try {
-      const { error } = await supabase
-        .from('wishlist')
-        .delete()
-        .eq('id', wishlistId)
-        .eq('user_id', user?.id);
-
-      if (error) {
-        console.error('Error removing from wishlist:', error);
-        toast.error('Failed to remove item from wishlist');
-        return;
-      }
-
+      // Mock removal for frontend-only mode
       setWishlistItems(prev => prev.filter(item => item.id !== wishlistId));
       toast.success('Item removed from wishlist');
     } catch (error) {

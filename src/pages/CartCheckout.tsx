@@ -87,41 +87,16 @@ const CartCheckout = () => {
         notes: notes || null
       };
 
-      const { data: order, error: orderError } = await supabase
-        .from('orders')
-        .insert([orderData])
-        .select()
-        .single();
-
-      if (orderError) {
-        console.error('Error creating order:', orderError);
-        toast.error('Failed to create order');
-        return null;
-      }
-
-      // Create order items
-      const orderItems = cartState.items.map(item => ({
-        order_id: order.id,
-        product_id: item.id,
-        variant_id: item.variantId || null,
-        quantity: item.quantity,
-        unit_price: item.price,
-        total_price: item.price * item.quantity
-      }));
-
-      const { error: itemsError } = await supabase
-        .from('order_items')
-        .insert(orderItems);
-
-      if (itemsError) {
-        console.error('Error creating order items:', itemsError);
-        toast.error('Failed to create order items');
-        return null;
-      }
+      // Mock order creation for frontend-only mode
+      const mockOrder = {
+        id: `order-${Date.now()}`,
+        ...orderData,
+        created_at: new Date().toISOString()
+      };
 
       toast.success('Order created successfully!');
       clearCart();
-      return order;
+      return mockOrder;
     } catch (error) {
       console.error('Error creating order:', error);
       toast.error('Failed to create order');
@@ -168,41 +143,16 @@ const CartCheckout = () => {
         notes: guestData.notes || null
       };
 
-      const { data: order, error: orderError } = await supabase
-        .from('orders')
-        .insert([orderData])
-        .select()
-        .single();
-
-      if (orderError) {
-        console.error('Error creating order:', orderError);
-        toast.error('Failed to create order');
-        return null;
-      }
-
-      // Create order items
-      const orderItems = cartState.items.map(item => ({
-        order_id: order.id,
-        product_id: item.id,
-        variant_id: item.variantId || null,
-        quantity: item.quantity,
-        unit_price: item.price,
-        total_price: item.price * item.quantity
-      }));
-
-      const { error: itemsError } = await supabase
-        .from('order_items')
-        .insert(orderItems);
-
-      if (itemsError) {
-        console.error('Error creating order items:', itemsError);
-        toast.error('Failed to create order items');
-        return null;
-      }
+      // Mock order creation for frontend-only mode
+      const mockOrder = {
+        id: `order-${Date.now()}`,
+        ...orderData,
+        created_at: new Date().toISOString()
+      };
 
       toast.success('Order created successfully!');
       clearCart();
-      return order;
+      return mockOrder;
     } catch (error) {
       console.error('Error creating order:', error);
       toast.error('Failed to create order');

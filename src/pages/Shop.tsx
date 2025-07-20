@@ -9,6 +9,7 @@ import { ShoppingBag, Heart, Star, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useTheme } from "@/hooks/useTheme";
 import { useCart } from "@/contexts/CartContext";
+import { sampleProducts } from "@/data/sampleProducts";
 
 interface Product {
   id: string;
@@ -37,26 +38,9 @@ const Shop = () => {
 
   const fetchProducts = async () => {
     try {
-      // Ensure products are seeded first
-      await seedProducts();
-      
-      // Add delay to ensure seeding completes
-      setTimeout(async () => {
-        const { data, error } = await supabase
-          .from('products')
-          .select('*')
-          .eq('is_active', true)
-          .order('created_at', { ascending: false });
-
-        if (error) {
-          console.error("Error fetching products:", error);
-          return;
-        }
-
-        console.log("Shop - Fetched products:", data);
-        setProducts(data || []);
-        setLoading(false);
-      }, 1000);
+      // Use sample products for frontend-only mode
+      setProducts(sampleProducts);
+      setLoading(false);
     } catch (error) {
       console.error("Error in fetchProducts:", error);
       setLoading(false);

@@ -26,10 +26,8 @@ export const ProductReviews = ({ productId }: ProductReviewsProps) => {
   } = useReviews(productId);
 
   const handleSubmitReview = async (reviewData: { rating: number; title: string; comment: string }) => {
-    const success = await submitReview(reviewData);
-    if (success) {
-      setShowReviewForm(false);
-    }
+    await submitReview(reviewData);
+    setShowReviewForm(false);
   };
 
   if (loading) {
