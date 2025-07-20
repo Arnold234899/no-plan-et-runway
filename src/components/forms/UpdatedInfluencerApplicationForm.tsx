@@ -6,8 +6,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/useAuth";
 
 export const UpdatedInfluencerApplicationForm = () => {
   const [formData, setFormData] = useState({
@@ -20,7 +18,6 @@ export const UpdatedInfluencerApplicationForm = () => {
     collaboration_ideas: ""
   });
   const [isLoading, setIsLoading] = useState(false);
-  const { user } = useAuth();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
@@ -33,39 +30,10 @@ export const UpdatedInfluencerApplicationForm = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    try {
-      // Save influencer application to database
-      const { error: dbError } = await supabase
-        .from('influencer_applications')
-        .insert([{
-          user_id: user?.id || null,
-          name: formData.name,
-          email: formData.email,
-          instagram_handle: formData.instagram_handle || null,
-          tiktok_handle: formData.tiktok_handle || null,
-          followers_count: formData.followers_count ? parseInt(formData.followers_count) : null,
-          why_interested: formData.why_interested || null,
-          collaboration_ideas: formData.collaboration_ideas || null
-        }]);
-
-      if (dbError) throw dbError;
-
-      // Send confirmation email to applicant
-      const { error: emailError } = await supabase.functions.invoke('send-email', {
-        body: {
-          type: 'influencer',
-          to: formData.email,
-          data: formData
-        }
-      });
-
-      if (emailError) {
-        console.error('Email error:', emailError);
-        toast.success("Application submitted successfully! (Confirmation email may be delayed)");
-      } else {
-        toast.success("Application submitted successfully! Check your email for confirmation.");
-      }
-
+    // Mock form submission
+    setTimeout(() => {
+      toast.success("Application submitted successfully!");
+      
       // Reset form
       setFormData({
         name: "",
@@ -76,12 +44,8 @@ export const UpdatedInfluencerApplicationForm = () => {
         why_interested: "",
         collaboration_ideas: ""
       });
-    } catch (error) {
-      console.error('Influencer application error:', error);
-      toast.error("Failed to submit application. Please try again.");
-    } finally {
       setIsLoading(false);
-    }
+    }, 1000);
   };
 
   return (

@@ -1,18 +1,17 @@
-import { useState, useEffect } from "react";
-import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
+import { useState, useEffect } from 'react';
+import { useAuth } from './useAuth';
 
-interface Review {
+export interface Review {
   id: string;
   rating: number;
-  title: string | null;
-  comment: string | null;
+  title: string;
+  comment: string;
   is_verified_purchase: boolean;
   created_at: string;
   website_users: {
-    first_name: string | null;
-    last_name: string | null;
+    first_name: string;
+    last_name: string;
+    email: string;
   };
 }
 
@@ -21,7 +20,7 @@ export const useReviews = (productId: string) => {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
-  const [userReview, setUserReview] = useState<any>(null);
+  const [userReview, setUserReview] = useState<Review | null>(null);
 
   useEffect(() => {
     fetchReviews();
@@ -31,129 +30,69 @@ export const useReviews = (productId: string) => {
   }, [productId, user]);
 
   const fetchReviews = async () => {
-    try {
-      // Fetch reviews and user data separately since there's no direct relationship
-      const { data: reviewsData, error: reviewsError } = await supabase
-        .from('product_reviews')
-        .select('*')
-        .eq('product_id', productId)
-        .eq('is_approved', true)
-        .order('created_at', { ascending: false });
-
-      if (reviewsError) {
-        console.error('Error fetching reviews:', reviewsError);
-        return;
-      }
-
-      // Get unique user IDs from reviews
-      const userIds = [...new Set(reviewsData?.map(review => review.user_id) || [])];
-      
-      // Fetch user data for those IDs
-      const { data: usersData, error: usersError } = await supabase
-        .from('website_users')
-        .select('user_id, first_name, last_name')
-        .in('user_id', userIds);
-
-      if (usersError) {
-        console.error('Error fetching users:', usersError);
-      }
-
-      // Create a map of user data for quick lookup
-      const usersMap = new Map();
-      (usersData || []).forEach(user => {
-        usersMap.set(user.user_id, user);
-      });
-
-      // Transform the data to match our Review interface
-      const transformedReviews = (reviewsData || []).map((review) => {
-        const userData = usersMap.get(review.user_id) || {};
-        return {
-          id: review.id,
-          rating: review.rating,
-          title: review.title,
-          comment: review.comment,
-          is_verified_purchase: review.is_verified_purchase,
-          created_at: review.created_at,
+    // Mock reviews data
+    setTimeout(() => {
+      const mockReviews: Review[] = [
+        {
+          id: '1',
+          rating: 5,
+          title: 'Amazing quality!',
+          comment: 'This product exceeded my expectations. The quality is outstanding.',
+          is_verified_purchase: true,
+          created_at: new Date().toISOString(),
           website_users: {
-            first_name: userData.first_name || null,
-            last_name: userData.last_name || null,
-          },
-        };
-      }) as Review[];
-
-      setReviews(transformedReviews);
-    } catch (error) {
-      console.error('Error fetching reviews:', error);
-    } finally {
+            first_name: 'John',
+            last_name: 'Doe',
+            email: 'john@example.com'
+          }
+        },
+        {
+          id: '2',
+          rating: 4,
+          title: 'Great value',
+          comment: 'Very satisfied with this purchase. Fast shipping too!',
+          is_verified_purchase: true,
+          created_at: new Date().toISOString(),
+          website_users: {
+            first_name: 'Jane',
+            last_name: 'Smith',
+            email: 'jane@example.com'
+          }
+        }
+      ];
+      setReviews(mockReviews);
       setLoading(false);
-    }
+    }, 500);
   };
 
   const checkUserReview = async () => {
-    if (!user) return;
-
-    try {
-      const { data, error } = await supabase
-        .from('product_reviews')
-        .select('*')
-        .eq('product_id', productId)
-        .eq('user_id', user.id)
-        .single();
-
-      if (error && error.code !== 'PGRST116') {
-        console.error('Error checking user review:', error);
-        return;
-      }
-
-      setUserReview(data);
-    } catch (error) {
-      console.error('Error checking user review:', error);
-    }
+    // Mock check for user review
+    setUserReview(null);
   };
 
   const submitReview = async (reviewData: { rating: number; title: string; comment: string }) => {
-    if (!user) {
-      toast.error('Please sign in to leave a review');
-      return false;
-    }
-
-    if (!reviewData.comment.trim()) {
-      toast.error('Please write a review comment');
-      return false;
-    }
+    if (!user) return;
 
     setSubmitting(true);
-
-    try {
-      const { error } = await supabase
-        .from('product_reviews')
-        .insert([{
-          user_id: user.id,
-          product_id: productId,
-          rating: reviewData.rating,
-          title: reviewData.title.trim() || null,
-          comment: reviewData.comment.trim(),
-          is_verified_purchase: false,
-          is_approved: true
-        }]);
-
-      if (error) {
-        console.error('Error submitting review:', error);
-        toast.error('Failed to submit review');
-        return false;
-      }
-
-      toast.success('Review submitted successfully!');
-      fetchReviews();
-      checkUserReview();
-      return true;
-    } catch (error) {
-      console.error('Error submitting review:', error);
-      toast.error('Failed to submit review');
-      return false;
-    } finally {
+    
+    // Mock review submission
+    setTimeout(() => {
+      const newReview: Review = {
+        id: Date.now().toString(),
+        ...reviewData,
+        is_verified_purchase: false,
+        created_at: new Date().toISOString(),
+        website_users: {
+          first_name: 'Current',
+          last_name: 'User',
+          email: user.email
+        }
+      };
+      
+      setReviews(prev => [newReview, ...prev]);
+      setUserReview(newReview);
       setSubmitting(false);
-    }
+    }, 1000);
   };
 
   const averageRating = reviews.length > 0 
@@ -166,6 +105,6 @@ export const useReviews = (productId: string) => {
     submitting,
     userReview,
     averageRating,
-    submitReview
+    submitReview,
   };
 };

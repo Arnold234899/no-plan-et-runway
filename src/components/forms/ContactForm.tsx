@@ -6,8 +6,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/useAuth";
 
 export const ContactForm = () => {
   const [formData, setFormData] = useState({
@@ -17,7 +15,6 @@ export const ContactForm = () => {
     message: ""
   });
   const [isLoading, setIsLoading] = useState(false);
-  const { user } = useAuth();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
@@ -30,36 +27,10 @@ export const ContactForm = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    try {
-      // Save contact message to database
-      const { error: dbError } = await supabase
-        .from('contact_messages')
-        .insert([{
-          user_id: user?.id || null,
-          name: formData.name,
-          email: formData.email,
-          subject: formData.subject,
-          message: formData.message
-        }]);
-
-      if (dbError) throw dbError;
-
-      // Send confirmation email to user
-      const { error: emailError } = await supabase.functions.invoke('send-email', {
-        body: {
-          type: 'contact',
-          to: formData.email,
-          data: formData
-        }
-      });
-
-      if (emailError) {
-        console.error('Email error:', emailError);
-        toast.success("Message sent successfully! (Confirmation email may be delayed)");
-      } else {
-        toast.success("Message sent successfully! Check your email for confirmation.");
-      }
-
+    // Mock form submission
+    setTimeout(() => {
+      toast.success("Message sent successfully!");
+      
       // Reset form
       setFormData({
         name: "",
@@ -67,12 +38,8 @@ export const ContactForm = () => {
         subject: "",
         message: ""
       });
-    } catch (error) {
-      console.error('Contact form error:', error);
-      toast.error("Failed to send message. Please try again.");
-    } finally {
       setIsLoading(false);
-    }
+    }, 1000);
   };
 
   return (

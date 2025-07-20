@@ -1,12 +1,11 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ShoppingBag, Heart, Star, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
-import { seedProducts } from "@/utils/seedProducts";
 import { useCart } from "@/contexts/CartContext";
+import { sampleProducts } from "@/data/sampleProducts";
 
 interface Product {
   id: string;
@@ -22,42 +21,13 @@ interface Product {
 }
 
 export const FeaturedProducts = () => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
   const { addItem } = useCart();
-
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  const fetchProducts = async () => {
-    try {
-      // First ensure products are seeded
-      await seedProducts();
-      
-      // Add a small delay to ensure seeding is complete
-      setTimeout(async () => {
-        const { data, error } = await supabase
-          .from('products')
-          .select('*')
-          .eq('is_active', true)
-          .order('created_at', { ascending: false })
-          .limit(8);
-
-        if (error) {
-          console.error("Error fetching products:", error);
-          return;
-        }
-
-        console.log("Fetched products:", data);
-        setProducts(data || []);
-        setLoading(false);
-      }, 1000);
-    } catch (error) {
-      console.error("Error in fetchProducts:", error);
-      setLoading(false);
-    }
-  };
+  
+  // Use sample products directly
+  const products = sampleProducts.map(p => ({
+    ...p,
+    stock_quantity: 50
+  }));
 
   const handleAddToCart = (product: Product) => {
     addItem({
@@ -70,15 +40,6 @@ export const FeaturedProducts = () => {
     });
   };
 
-  if (loading) {
-    return (
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-950 via-blue-950 to-emerald-950">
-        <div className="max-w-7xl mx-auto text-center">
-          <div className="text-emerald-400 text-xl">Loading sustainable collection...</div>
-        </div>
-      </section>
-    );
-  }
 
   return (
     <section id="shop" className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-950 via-blue-950 to-emerald-950">
@@ -92,19 +53,7 @@ export const FeaturedProducts = () => {
           </p>
         </div>
 
-        {products.length === 0 ? (
-          <div className="text-center py-12">
-            <div className="text-zinc-400 text-lg mb-4">No products available at the moment</div>
-            <Button 
-              onClick={fetchProducts}
-              className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white"
-            >
-              Refresh Products
-            </Button>
-          </div>
-        ) : (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {products.map((product) => (
                 <div
                   key={product.id}
@@ -193,8 +142,6 @@ export const FeaturedProducts = () => {
                 </Button>
               </Link>
             </div>
-          </>
-        )}
       </div>
     </section>
   );

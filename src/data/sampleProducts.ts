@@ -2,6 +2,7 @@
 // Sample products to be added to the database
 export const sampleProducts = [
   {
+    id: "1",
     name: "Urban Rebel Leather Jacket",
     price: 450,
     description: "Premium vegan leather jacket crafted from sustainable materials. Features asymmetric zip closure, multiple pockets, and silver hardware detailing. Perfect for the conscious fashionista.",
@@ -14,6 +15,7 @@ export const sampleProducts = [
     is_active: true
   },
   {
+    id: "2",
     name: "Mindful Minimalist Tee",
     price: 65,
     description: "Soft organic cotton t-shirt with relaxed fit. Made from 100% GOTS certified organic cotton in a fair-trade facility. Available in natural colors.",
@@ -26,6 +28,7 @@ export const sampleProducts = [
     is_active: true
   },
   {
+    id: "3",
     name: "Revolution Wide Leg Pants",
     price: 185,
     description: "High-waisted wide leg pants made from recycled polyester blend. Features elastic waistband and flowing silhouette. Perfect for both casual and dressy occasions.",
@@ -38,6 +41,7 @@ export const sampleProducts = [
     is_active: true
   },
   {
+    id: "4",
     name: "Conscious Midi Dress",
     price: 195,
     description: "Elegant midi dress crafted from Tencel fabric. Features wrap design, three-quarter sleeves, and flattering A-line silhouette. Dyed with natural, low-impact dyes.",
@@ -50,6 +54,7 @@ export const sampleProducts = [
     is_active: true
   },
   {
+    id: "5",
     name: "Earth Warrior Hoodie",
     price: 125,
     description: "Cozy pullover hoodie made from organic cotton fleece. Features kangaroo pocket, adjustable hood, and relaxed fit. Screen printed with water-based inks.",
@@ -62,6 +67,7 @@ export const sampleProducts = [
     is_active: true
   },
   {
+    id: "6",
     name: "Future Vision Blazer",
     price: 320,
     description: "Structured blazer made from innovative recycled wool blend. Features peak lapels, single-breasted design, and modern slim fit. Perfect for the eco-conscious professional.",
@@ -74,6 +80,7 @@ export const sampleProducts = [
     is_active: true
   },
   {
+    id: "7",
     name: "Sustainable Denim Jacket",
     price: 295,
     description: "Classic denim jacket made from 100% organic cotton denim. Features traditional button closure, chest pockets, and vintage wash. Zero harmful chemicals used in production.",
@@ -86,6 +93,7 @@ export const sampleProducts = [
     is_active: true
   },
   {
+    id: "8",
     name: "Eco Luxe Slip Dress",
     price: 145,
     description: "Silky slip dress made from Peace Silk (cruelty-free silk). Features bias cut, adjustable straps, and midi length. Perfect for layering or wearing alone.",
@@ -98,6 +106,7 @@ export const sampleProducts = [
     is_active: true
   },
   {
+    id: "9",
     name: "Regenerative Cotton Joggers",
     price: 95,
     description: "Comfortable joggers made from regenerative organic cotton. Features elastic waistband, tapered fit, and side pockets. Supports soil health and carbon sequestration.",
@@ -110,6 +119,7 @@ export const sampleProducts = [
     is_active: true
   },
   {
+    id: "10",
     name: "Zero Waste Cardigan",
     price: 175,
     description: "Open-front cardigan knitted from recycled cashmere blend. Features dropped shoulders, long sleeves, and relaxed fit. Made using zero-waste knitting techniques.",
@@ -122,6 +132,7 @@ export const sampleProducts = [
     is_active: true
   },
   {
+    id: "11",
     name: "Planet Positive Maxi Skirt",
     price: 155,
     description: "Flowing maxi skirt made from hemp-silk blend. Features elastic waistband, A-line silhouette, and ankle length. Hemp cultivation actually improves soil health.",
@@ -134,6 +145,7 @@ export const sampleProducts = [
     is_active: true
   },
   {
+    id: "12",
     name: "Climate Action Bomber",
     price: 385,
     description: "Contemporary bomber jacket made from recycled nylon. Features ribbed cuffs, zip closure, and lightweight construction. Every purchase funds climate action projects.",

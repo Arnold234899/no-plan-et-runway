@@ -1,7 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { supabase } from "@/integrations/supabase/client";
-import { seedProducts } from "@/utils/seedProducts";
+import { sampleProducts } from '@/data/sampleProducts';
 
 type Product = {
   id: string;
@@ -27,50 +26,27 @@ export const useProduct = (id: string | undefined) => {
   const fetchProduct = async () => {
     if (!id) return;
 
-    try {
-      console.log(`Fetching product with ID: ${id}`);
+    // Mock delay for realistic loading
+    setTimeout(() => {
+      const foundProduct = sampleProducts.find(p => p.id === id);
       
-      // First ensure products are seeded
-      await seedProducts();
-      
-      const { data, error } = await supabase
-        .from('products')
-        .select('*')
-        .eq('id', id)
-        .eq('is_active', true)
-        .maybeSingle(); // Use maybeSingle instead of single to avoid errors when no data found
-
-      if (error) {
-        console.error('Error fetching product:', error);
+      if (foundProduct) {
+        const formattedProduct: Product = {
+          id: foundProduct.id,
+          name: foundProduct.name,
+          price: foundProduct.price,
+          image: foundProduct.image_url || '/placeholder.svg',
+          description: foundProduct.description || '',
+          category: foundProduct.category,
+          sustainable: foundProduct.sustainable ?? true,
+          stockQuantity: 50, // Default stock
+        };
+        setProduct(formattedProduct);
+      } else {
         setProduct(null);
-        return;
       }
-
-      if (!data) {
-        console.log(`No product found with ID: ${id}`);
-        setProduct(null);
-        return;
-      }
-
-      const formattedProduct: Product = {
-        id: data.id,
-        name: data.name,
-        price: data.price,
-        image: data.image_url || `https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=1200&fit=crop`,
-        description: data.description || 'No description available.',
-        category: data.category,
-        sustainable: data.sustainable || false,
-        stockQuantity: data.stock_quantity || 0,
-      };
-
-      console.log('Product found:', formattedProduct);
-      setProduct(formattedProduct);
-    } catch (error) {
-      console.error('Error fetching product:', error);
-      setProduct(null);
-    } finally {
       setLoading(false);
-    }
+    }, 500);
   };
 
   return { product, loading };

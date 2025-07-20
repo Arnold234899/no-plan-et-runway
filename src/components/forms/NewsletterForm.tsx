@@ -3,7 +3,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
 
 export const NewsletterForm = () => {
   const [email, setEmail] = useState("");
@@ -13,45 +12,12 @@ export const NewsletterForm = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    try {
-      // First, save to newsletter_subscriptions table
-      const { error: subscriptionError } = await supabase
-        .from('newsletter_subscriptions')
-        .insert([{ email }]);
-
-      if (subscriptionError) {
-        // Check if it's a duplicate email error
-        if (subscriptionError.code === '23505') {
-          toast.error("You're already subscribed to our newsletter!");
-          return;
-        }
-        throw subscriptionError;
-      }
-
-      // Send welcome email
-      const { error: emailError } = await supabase.functions.invoke('send-email', {
-        body: {
-          type: 'newsletter',
-          to: email,
-          data: { email }
-        }
-      });
-
-      if (emailError) {
-        console.error('Email error:', emailError);
-        // Don't fail the subscription if email fails
-        toast.success("Successfully subscribed! (Welcome email may be delayed)");
-      } else {
-        toast.success("Successfully subscribed! Check your email for a welcome message.");
-      }
-
+    // Mock newsletter subscription
+    setTimeout(() => {
+      toast.success("Successfully subscribed to our newsletter!");
       setEmail("");
-    } catch (error) {
-      console.error('Newsletter subscription error:', error);
-      toast.error("Failed to subscribe. Please try again.");
-    } finally {
       setIsLoading(false);
-    }
+    }, 1000);
   };
 
   return (
